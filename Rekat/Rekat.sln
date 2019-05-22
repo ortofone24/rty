@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rekat", "Rekat.csproj", "{397E296C-0DE7-41F6-9997-39B08C252348}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{397E296C-0DE7-41F6-9997-39B08C252348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{397E296C-0DE7-41F6-9997-39B08C252348}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{397E296C-0DE7-41F6-9997-39B08C252348}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{397E296C-0DE7-41F6-9997-39B08C252348}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {74C38A9F-D0EF-4B44-808E-65145FE67F98}
+	EndGlobalSection
+EndGlobal
