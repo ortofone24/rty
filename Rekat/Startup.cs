@@ -91,6 +91,21 @@ namespace Rekat
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequiredLoggedIn", policy => policy.RequireRole("Admin", "Customer").RequireAuthenticatedUser());
+
+                options.AddPolicy("RequiredAdministratorRole", policy => policy.RequireRole("Admin").RequireAuthenticatedUser());
+            });
+
+            /*
+                 Requirement:
+                 User should be Authenticated
+                 User Must be Authorized.
+                 In order to view products(GetAllProducts)
+            */
+
         }
 
 
