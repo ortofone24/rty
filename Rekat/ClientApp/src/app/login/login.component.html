@@ -1,3 +1,42 @@
-<p>
-  login works!
-</p>
+<!-- LOGIN SECTION -->
+<section class="login-block">
+  <!-- ALERT  WARNING START -->
+  <div class="text-center mb-3 alert alert-warning alert-dismissible"  role="alert">
+    <strong>Error message</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div><!-- ALERT  WARNING END -->
+  <!-- LOGIN CONTAINER START -->
+  <div class="container signLog">
+    <div class="row">
+
+      <!-- LOGIN COLUMN START -->
+      <div class="col-md-4 login-sec">
+        <h2 class="text-center">Login Now</h2>
+        <!-- LOGIN FORM START -->
+        <form class="login-form form" >
+          <div class="form-group">
+            <label for="UserName" class="text-uppercase">Username</label>
+            <input formControlName="Username" type="text" class="form-control" placeholder="" required autofocus>
+            <div >
+              <span >Username is required.</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="Password" class="text-uppercase">Password</label>
+            <input formControlName="Password" type="password" class="form-control" placeholder="" required autofocus>
+            <div class="errorMessage">
+              <span>Password is required.</span>
+
+            </div>
+          </div>
+
+          <input type="submit" class="btn btn-login btn-block" value="Submit"  />
+          <br />
+        </form><!-- LOGIN FORM END -->
+        
+      </div> <!-- LOGIN SECTION END -->
+     </div>
+  </div> <!-- LOGIN CONTAINER END -->
+</section>
