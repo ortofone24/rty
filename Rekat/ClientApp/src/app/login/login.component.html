@@ -1,8 +1,8 @@
 <!-- LOGIN SECTION -->
 <section class="login-block">
   <!-- ALERT  WARNING START -->
-  <div class="text-center mb-3 alert alert-warning alert-dismissible"  role="alert">
-    <strong>Error message</strong>
+  <div class="text-center mb-3 alert alert-warning alert-dismissible" *ngIf="invalidLogin" role="alert">
+    <strong>{{ErrorMessage}}</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -15,28 +15,26 @@
       <div class="col-md-4 login-sec">
         <h2 class="text-center">Login Now</h2>
         <!-- LOGIN FORM START -->
-        <form class="login-form form" >
+        <form class="login-form form" [formGroup]="insertForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
             <label for="UserName" class="text-uppercase">Username</label>
             <input formControlName="Username" type="text" class="form-control" placeholder="" required autofocus>
-            <div >
-              <span >Username is required.</span>
+            <div *ngIf="Username.touched && Username.errors" class="errorMessage">
+              <span *ngIf="Username.hasError('required')">Wymagana nazwa użytkownika.</span>
             </div>
           </div>
           <div class="form-group">
             <label for="Password" class="text-uppercase">Password</label>
             <input formControlName="Password" type="password" class="form-control" placeholder="" required autofocus>
-            <div class="errorMessage">
-              <span>Password is required.</span>
-
+            <div *ngIf="Password.touched && Password.errors" class="errorMessage">
+              <span *ngIf="Password.hasError('required')">Wymagane hasło.</span>
             </div>
           </div>
-
-          <input type="submit" class="btn btn-login btn-block" value="Submit"  />
+          <input type="submit" class="btn btn-login btn-block" value="Zaloguj" [disabled]="insertForm.invalid" />
           <br />
         </form><!-- LOGIN FORM END -->
-        
-      </div> <!-- LOGIN SECTION END -->
-     </div>
+
+      </div><!--LOGIN COLUMN END-->
+    </div>
   </div> <!-- LOGIN CONTAINER END -->
-</section>
+</section><!-- LOGIN SECTION END -->

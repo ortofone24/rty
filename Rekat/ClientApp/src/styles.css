@@ -176,3 +176,57 @@ body
   }
 
 /*Login CSS END*/
+
+
+/*Register CSS*/
+
+
+.register-block {
+  background: #DE6262; 
+  background: -webkit-linear-gradient(to bottom, #b1880f,#b1d20f); 
+  background: linear-gradient(to bottom, #b1880f,#b1d20f); 
+  float: left;
+  width: 100%;
+  padding: 50px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.registerLog {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 15px 20px 0px rgba(0,0,0,0.1);
+}
+
+.register-sec {
+  padding: 50px 30px 0 50px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.register-sec h2 {
+  position: relative;
+  font-weight: 800;
+  font-size: 30px;
+  color: #b1880f;
+}
+
+  .register-sec h2:after {
+    content: " ";
+    width: 100px;
+    height: 5px;
+    background: #b1880f;
+    display: block;
+    margin-top: 20px;
+    border-radius: 3px;
+    margin-left: auto;
+    margin-right: auto
+  }
+
+.errorMessage {
+  color: red;
+}
+
+
+
+/*Register CSS END*/

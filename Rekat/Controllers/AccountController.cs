@@ -89,12 +89,12 @@ namespace Rekat.Controllers
             {
                 // then check if email is confirmed
 
-                if (!await _userManager.IsEmailConfirmedAsync(user))
-                {
-                    ModelState.AddModelError(string.Empty, "Uzytkownik nie potwierdzil email'a");
+                //if (!await _userManager.IsEmailConfirmedAsync(user))
+                //{
+                //    ModelState.AddModelError(string.Empty, "Uzytkownik nie potwierdzil email'a");
 
-                    return Unauthorized(new { LoginError = "Zakoncz rejestracje potwierdzajac email" });
-                }
+                //    return Unauthorized(new { LoginError = "Zakoncz rejestracje potwierdzajac email" });
+                //}
 
                 var roles = await _userManager.GetRolesAsync(user);
 
