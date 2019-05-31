@@ -5,7 +5,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -27,11 +29,14 @@ namespace Rekat.Controllers
 
         private readonly AppSettings _appSettings;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IOptions<AppSettings> appSettings)
+        private IEmailSender _emailsender;
+
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IOptions<AppSettings> appSettings, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _appSettings = appSettings.Value;
+            _emailsender = emailSender;
         }
 
         // wywołanie www.example.com/api/account/register
@@ -55,11 +60,11 @@ namespace Rekat.Controllers
                 await _userManager.AddToRoleAsync(user, "Customer");
 
                 // Sending Confirmation Email
-                //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Code = code }, protocol: HttpContext.Request.Scheme);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Code = code }, protocol: HttpContext.Request.Scheme);
 
-                //await _emailsender.SendEmailAsync(user.Email, "mhg3d - confirm your email", "Potwierdź swój email klikając w link: <a href=\"" + callbackUrl + "\">click here</a>");
+                await _emailsender.SendEmailAsync(user.Email, "biuro-rekat - confirm your email", "Potwierdź swój email klikając w link: <a href=\"" + callbackUrl + "\">click here</a>");
 
                 return Ok(new { username = user.UserName, email = user.Email, status = 1, message = "Rejestracja zakończona pomyślnie" });
             }
@@ -89,12 +94,12 @@ namespace Rekat.Controllers
             {
                 // then check if email is confirmed
 
-                //if (!await _userManager.IsEmailConfirmedAsync(user))
-                //{
-                //    ModelState.AddModelError(string.Empty, "Uzytkownik nie potwierdzil email'a");
+                if (!await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    ModelState.AddModelError(string.Empty, "Uzytkownik nie potwierdzil email'a");
 
-                //    return Unauthorized(new { LoginError = "Zakoncz rejestracje potwierdzajac email" });
-                //}
+                    return Unauthorized(new { LoginError = "Zakoncz rejestracje potwierdzajac email" });
+                }
 
                 var roles = await _userManager.GetRolesAsync(user);
 
@@ -127,5 +132,46 @@ namespace Rekat.Controllers
             ModelState.AddModelError("", "Użytkownik lub Hasło nie zostało znalezione");
             return Unauthorized(new { LoginError = "Proszę sprawdzić podany login lub hasło" });
         }
+
+        [HttpGet("[action]")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
+            {
+                ModelState.AddModelError("", "User Id and Code are required");
+                return BadRequest(ModelState);
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return new JsonResult("Błąd");
+            }
+
+            if (user.EmailConfirmed)
+            {
+                return Redirect("/login");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("EmailConfirmed", "Notifications", new { userId, code });
+            }
+            else
+            {
+                List<string> errors = new List<string>();
+                foreach (var error in result.Errors)
+                {
+                    errors.Add(error.ToString());
+                }
+
+                return new JsonResult(errors);
+            }
+        }
+
     }
 }

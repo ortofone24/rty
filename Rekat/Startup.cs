@@ -10,7 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Rekat.Data;
+using Rekat.Email;
 using Rekat.Helpers;
+using Rekat.Services;
 using System;
 using System.Text;
 
@@ -29,6 +31,9 @@ namespace Rekat
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSendGridEmailSender();
+           
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
