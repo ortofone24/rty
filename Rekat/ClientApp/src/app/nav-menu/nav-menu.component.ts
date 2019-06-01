@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from '../../../node_modules/rxjs';
 import { AccountService } from '../services/account.service';
-//import { ProductService } from '../services/product.service';
+import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -10,7 +10,7 @@ import { AccountService } from '../services/account.service';
 })
 export class NavMenuComponent implements OnInit {
 
-  constructor(private acct: AccountService, /*private productservice: ProductService*/) { }
+  constructor(private acct: AccountService, private productservice: ProductService) { }
 
   LoginStatus$: Observable<boolean>;
   UserName$: Observable<string>;
@@ -23,7 +23,7 @@ export class NavMenuComponent implements OnInit {
 
   onLogout()
   {
-    //this.productservice.clearCache();
+    this.productservice.clearCache();
     this.acct.logout();
   }
 }

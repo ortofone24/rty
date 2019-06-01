@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Rekat.Helpers;
 using Rekat.Models;
+using Rekat.Email;
 
 
 
@@ -29,9 +30,9 @@ namespace Rekat.Controllers
 
         private readonly AppSettings _appSettings;
 
-        private IEmailSender _emailsender;
+        private Rekat.Email.IEmailSender _emailsender;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IOptions<AppSettings> appSettings, IEmailSender emailSender)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IOptions<AppSettings> appSettings, Rekat.Email.IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;

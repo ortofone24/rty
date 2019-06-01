@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map, retry } from 'rxjs/operators';
 
 
 @Injectable({
@@ -68,13 +68,15 @@ export class AccountService {
 
     var loginCookie = localStorage.getItem("loginStatus");
 
-    if (loginCookie == "1") {
-      if (localStorage.getItem('jwt') === null || localStorage.getItem('jwt') === undefined) {
-        return false;
-      }
+    if (loginCookie == "1")
+    {
+      return true;
+      //if (localStorage.getItem('jwt') === null || localStorage.getItem('jwt') === undefined) {
+      //  return false;
+      //}
 
       // Get and Decode the Token
-      const token = localStorage.getItem('jwt');
+      //const token = localStorage.getItem('jwt');
       //const decoded = jwt_decode(token);
       // Check if the cookie is valid
 
@@ -83,7 +85,7 @@ export class AccountService {
       //}
 
       // Get Current Date Time
-      const date = new Date(0);
+      //const date = new Date(0);
 
       // Convert EXp Time to UTC
       //let tokenExpDate = date.setUTCSeconds(decoded.exp);
@@ -97,7 +99,7 @@ export class AccountService {
       //console.log("NEW DATE " + new Date().valueOf());
       //console.log("Token DATE " + tokenExpDate.valueOf());
 
-      return false;
+      //return false;
 
     }
     return false;
