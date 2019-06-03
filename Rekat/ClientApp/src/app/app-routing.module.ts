@@ -10,7 +10,7 @@ const routes: Routes = [];
   imports: [RouterModule.forRoot([
     { path: "home", component: HomeComponent },
     { path: '', component: HomeComponent, pathMatch: 'full' },
-    //{ path: 'products', loadChildren: './products/products.module#ProductsModule' },
+    { path: 'products', loadChildren: './products/products.module#ProductsModule' },
     { path: "login", component: LoginComponent },
     { path: "register", component: RegisterComponent },
     //{ path: 'access-denied', component: AccessDeniedComponent },
