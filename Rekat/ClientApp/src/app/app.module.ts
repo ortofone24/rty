@@ -9,8 +9,7 @@ import { HomeComponent } from './home/home.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { ProductDetailsComponent } from './products/product-details/product-details.component';
-import { ProductListComponent } from './products/product-list/product-list.component';
+
 
 
 
@@ -22,8 +21,7 @@ import { ProductListComponent } from './products/product-list/product-list.compo
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    ProductDetailsComponent,
-    ProductListComponent,
+    
   ],
   imports: [
     BrowserModule,

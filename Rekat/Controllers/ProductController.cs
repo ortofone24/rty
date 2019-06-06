@@ -51,7 +51,7 @@ namespace Rekat.Controllers
 
         // api/product/1
         [HttpPut("[action]/{id}")]
-        //[Authorize(Policy = "RequiredAdministratorRole")]
+        [Authorize(Policy = "RequiredAdministratorRole")]
         public async Task<IActionResult> UpdateProduct([FromRoute] int id, [FromBody] ProductModel formdata)
         {
             if (!ModelState.IsValid)
