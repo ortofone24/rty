@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { map, retry } from 'rxjs/operators';
-
+import * as jwt_decode from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
@@ -64,46 +64,49 @@ export class AccountService {
   }
 
 
-  checkLoginStatus(): boolean {
+  checkLoginStatus(): boolean
+  {
 
     var loginCookie = localStorage.getItem("loginStatus");
 
     if (loginCookie == "1")
     {
-      return true;
-      //if (localStorage.getItem('jwt') === null || localStorage.getItem('jwt') === undefined) {
-      //  return false;
-      //}
+      if (localStorage.getItem('jwt') === null || localStorage.getItem('jwt') === undefined)
+      {
+        return false;
+      }
 
       // Get and Decode the Token
-      //const token = localStorage.getItem('jwt');
-      //const decoded = jwt_decode(token);
-      // Check if the cookie is valid
+      const token = localStorage.getItem('jwt');
+      const decoded = jwt_decode(token);
 
-      //if (decoded.exp === undefined) {
-      //  return false;
-      //}
+      // Check if the cookie is valid
+      if (decoded.exp === undefined)
+      {
+        return false;
+      }
 
       // Get Current Date Time
-      //const date = new Date(0);
+      const date = new Date(0);
 
       // Convert EXp Time to UTC
-      //let tokenExpDate = date.setUTCSeconds(decoded.exp);
+      let tokenExpDate = date.setUTCSeconds(decoded.exp);
 
       // If Value of Token time greter than 
+      if (tokenExpDate.valueOf() > new Date().valueOf())
+      {
+        return true;
+      }
 
-      //if (tokenExpDate.valueOf() > new Date().valueOf()) {
-      //  return true;
-      //}
+      console.log("NEW DATE " + new Date().valueOf());
+      console.log("Token DATE " + tokenExpDate.valueOf());
 
-      //console.log("NEW DATE " + new Date().valueOf());
-      //console.log("Token DATE " + tokenExpDate.valueOf());
-
-      //return false;
+      return false;
 
     }
     return false;
   }
+
 
   logout() {
     // Set Loginstatus to false and delete saved jwt cookie

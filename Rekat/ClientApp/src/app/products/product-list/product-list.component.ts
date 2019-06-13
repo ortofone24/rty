@@ -2,7 +2,10 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Product } from '../../interfaces/product';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
+import { ProductService } from '../../services/product.service';
+//import * as jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-product-list',
@@ -48,10 +51,38 @@ export class ProductListComponent implements OnInit {
   userRoleStatus: string;
 
   // Datables Properties
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject();
 
-  constructor() { }
+  @ViewChild(DataTableDirective) dtElement: DataTableDirective;
+
+  //decodeToken()
+  //{
+  //  var token = localStorage.getItem('jwt');
+
+  //  var decoded = jwt_decode(token);
+
+  //  console.log(decoded);
+  //}
+
+  constructor(private productservice: ProductService) { }
 
   ngOnInit() {
+    this.dtOptions =
+      {
+        pagingType: 'full_numbers',
+        pageLength: 5,
+        autoWidth: true,
+        order: [[0, 'des']],
+      };
+    this.products$ = this.productservice.getProducts();
+
+    this.products$.subscribe(result =>
+    {
+      this.products = result;
+
+      this.dtTrigger.next();
+    });
   }
 
 }
