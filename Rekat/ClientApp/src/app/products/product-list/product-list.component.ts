@@ -110,7 +110,24 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   // Update on Existing Product
   onUpdate() {
+    let editProduct = this.updateForm.value;
 
+    this.productservice.updateProduct(editProduct.id, editProduct).subscribe(
+      result => {
+        console.log('Produkt skorygowany');
+        this.productservice.clearCache();
+        this.products$ = this.productservice.getProducts();
+
+        this.products$.subscribe(updatedlist =>
+        {
+          this.products = updatedlist;
+          this.modalRef.hide();
+          this.rerender();
+        });
+
+      },
+      error => console.log('Nie udało Ci się skorygować')
+    )
   }
 
   // Load the update Modal

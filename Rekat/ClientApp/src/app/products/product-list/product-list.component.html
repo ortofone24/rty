@@ -153,7 +153,7 @@
         <li class="list-group-item" [hidden]="_id">
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="productId"><i class="fa fa-key"></i></span>
+              <span class="input-group-text" id="katId"><i class="fa fa-key"></i></span>
             </div>
             <input type="text" class="form-control" formControlName="id" />
           </div>
@@ -164,7 +164,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input type="text" id="_katNumber" formControlName="_katNumber" class="form-control" placeholder="Numer katalizatora" aria-label="name" aria-describedby="productTitle">
+            <input type="text" id="katNumber" formControlName="katNumber" class="form-control" placeholder="Numer katalizatora" aria-label="name" aria-describedby="productTitle">
           </div>
           <div class="errorMessage" *ngIf="_katNumber.touched && _katNumber.errors" >
             <span *ngIf="_katNumber.hasError('required')">Wymagany numer katalizatora.</span>
@@ -178,7 +178,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input type="text" id="_platynaWeight" formControlName="_platynaWeight" class="form-control" placeholder="Platyna" aria-label="name" aria-describedby="productTitle">
+            <input type="text" id="platynaWeight" formControlName="platynaWeight" class="form-control" placeholder="Platyna" aria-label="name" aria-describedby="productTitle">
           </div>
           <div class="errorMessage" *ngIf="_platynaWeight.touched && _platynaWeight.errors">
             <span *ngIf="_platynaWeight.hasError('required')">Podaj zawartość platyny.</span>
@@ -192,7 +192,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input type="text" id="_palladWeight" formControlName="_palladWeight" class="form-control" placeholder="Pallad" aria-label="name" aria-describedby="productTitle">
+            <input type="text" id="palladWeight" formControlName="palladWeight" class="form-control" placeholder="Pallad" aria-label="name" aria-describedby="productTitle">
           </div>
           <div class="errorMessage" *ngIf="_palladWeight.touched && _palladWeight.errors">
             <span *ngIf="_palladWeight.hasError('required')">Podaj zawartość palladu.</span>
@@ -206,7 +206,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input type="text" id="_rodWeight" formControlName="_rodWeight" class="form-control" placeholder="Rod" aria-label="name" aria-describedby="productTitle">
+            <input type="text" id="rodWeight" formControlName="rodWeight" class="form-control" placeholder="Rod" aria-label="name" aria-describedby="productTitle">
           </div>
           <div class="errorMessage" *ngIf="_rodWeight.touched && _rodWeight.errors">
             <span *ngIf="_rodWeight.hasError('required')">Podaj zawartość rodu.</span>
@@ -215,26 +215,26 @@
           </div>
         </li>
 
-        <!--<li class="list-group-item">
+        <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input type="text" id="_katWeigthPerKg" formControlName="_katWeigthPerKg" class="form-control" placeholder="Waga/Kg" aria-label="name" aria-describedby="productTitle">
+            <input type="text" id="katWeigthPerKg" formControlName="katWeigthPerKg" class="form-control" placeholder="Waga/Kg" aria-label="name" aria-describedby="productTitle">
           </div>
           <div class="errorMessage" *ngIf="_katWeigthPerKg.touched && _katWeigthPerKg.errors">
             <span *ngIf="_katWeigthPerKg.hasError('required')">Podaj wartość w kg.</span>
             <span *ngIf="_katWeigthPerKg.hasError('maxlength')">Dozwolone 10 znaków.</span>
             <span *ngIf="_katWeigthPerKg.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
           </div>
-        </li>-->
+        </li>
 
         <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="ImageUrl"><i class="fa fa-picture-o"></i></span>
             </div>
-            <input type="text" formControlName="_imageUrl" class="form-control" placeholder="np: https://i.imgur.com/ApYPYbQ" aria-label="ImageUrl" aria-describedby="productTitle">
+            <input type="text" formControlName="imageUrl" class="form-control" placeholder="np: https://i.imgur.com/ApYPYbQ" aria-label="ImageUrl" aria-describedby="productTitle">
           </div>
           <div class="errorMessage" *ngIf="_imageUrl.touched && _imageUrl.errors">
             <span *ngIf="_imageUrl.hasError('pattern')">Podałeś nieprawidłowy adres.</span>
