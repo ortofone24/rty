@@ -35,7 +35,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   _katWeigthPerKg: FormControl;
   _id: FormControl;
 
-  // Add Modala
+  // Add Modal
   @ViewChild('template') modal: TemplateRef<any>;
 
   // Update Modal
