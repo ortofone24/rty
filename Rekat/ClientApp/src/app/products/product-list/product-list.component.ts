@@ -35,7 +35,7 @@ export class ProductListComponent implements OnInit {
   _katWeightPerKg: FormControl;
   _id: FormControl;
 
-  // Add Modal
+  // Add Modala
   @ViewChild('template') modal: TemplateRef<any>;
 
   // Update Modal
