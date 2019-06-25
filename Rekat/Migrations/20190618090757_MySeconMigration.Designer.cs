@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rekat.Data;
 
 namespace Rekat.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190618090757_MySeconMigration")]
+    partial class MySeconMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,15 +208,20 @@ namespace Rekat.Migrations
                     b.Property<string>("KatNumber")
                         .IsRequired();
 
-                    b.Property<double>("KatPrice");
+                    b.Property<string>("KatPrice")
+                        .IsRequired();
 
-                    b.Property<double>("KatWeigthPerKg");
+                    b.Property<string>("KatWeigthPerKg")
+                        .IsRequired();
 
-                    b.Property<double>("PalladWeight");
+                    b.Property<string>("PalladWeight")
+                        .IsRequired();
 
-                    b.Property<double>("PlatynaWeight");
+                    b.Property<string>("PlatynaWeight")
+                        .IsRequired();
 
-                    b.Property<double>("RodWeight");
+                    b.Property<string>("RodWeight")
+                        .IsRequired();
 
                     b.HasKey("KatId");
 

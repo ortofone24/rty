@@ -98,8 +98,8 @@ export class AccountService {
         return true;
       }
 
-      console.log("NEW DATE " + new Date().valueOf());
-      console.log("Token DATE " + tokenExpDate.valueOf());
+      //console.log("NEW DATE " + new Date().valueOf());
+      //console.log("Token DATE " + tokenExpDate.valueOf());
 
       return false;
 

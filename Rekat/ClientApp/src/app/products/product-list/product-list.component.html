@@ -1,24 +1,24 @@
 <div class="container-fluid">
 
-  <button class="btn btn-warning mb-3 float-right text-uppercase" ><i class="fa fa-plus"></i> Add Product</button>
+  <button class="btn btn-warning mb-3 float-right text-uppercase" (click)="onAddProduct()"><i class="fa fa-plus"></i> Dodaj katalizator</button>
   <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered row-border hover" style="width:100%">
     <thead class="text-center thead-dark">
       <tr>
-        <th>Number</th>
-        <th>Price</th>
-        <th>Image</th>
-        <th>Actions</th>
+        <th>Numer</th>
+        <th>Cena</th>
+        <th>Zdjęcie</th>
+        <th>Dodaj/Usuń/Edytuj</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let product of products" class="text-center">
         <td>{{product.katNumber}}</td>
         <td>{{product.katPrice}} PLN </td>
-        <td><img [src]="product.imageUrl" *ngIf="product.imageUrl" style="float:right" width="75" /></td>
+        <td><img [src]="product.imageUrl" *ngIf="product.imageUrl" style="float:none" width="75" /></td>
         <td>
           <div class="btn-group mt-2" role="group">
             <button type="button" class="btn btn-success"><i class="fas fa-list"></i></button>
-            <button type="button" class="btn btn-primary"><i class="fas fa-edit"></i></button>
+            <button type="button" class="btn btn-primary" (click)="onUpdateModal(product)"><i class="fas fa-edit"></i></button>
             <button type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
           </div>
         </td>
@@ -31,7 +31,7 @@
 <!-- ADD PRODUCT MODAL START-->
 <ng-template #template>
   <div class="modal-header">
-    <h4 class="modal-title">ADD NEW PRODUCT</h4>
+    <h4 class="modal-title">Dodaj katalizator</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -39,80 +39,107 @@
   <div class="modal-body text-center">
     <p class="list-group-item active text-center text-uppercase">{{modalMessage}}</p>
     <form [formGroup]="insertForm" (ngSubmit)="onSubmit()">
+      <!------------------------------------------------->
       <ul class="list-group">
+
         <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input type="text" id="name" formControlName="name" class="form-control" placeholder="eg: Macbook Air 2019" aria-label="name" aria-describedby="productTitle">
+            <input type="text" id="katNumber" formControlName="katNumber" class="form-control" placeholder="Numer katalizatora" aria-label="name" aria-describedby="productTitle">
           </div>
-          <div class="errorMessage" *ngIf="name.touched && name.errors">
-            <span *ngIf="name.hasError('required')">Product Name is required.</span>
-            <span *ngIf="name.hasError('maxlength')">Only 50 characters allowed for Product Name.</span>
+          <div class="errorMessage" *ngIf="katNumber.touched && katNumber.errors">
+            <span *ngIf="katNumber.hasError('required')">Wymagany numer katalizatora.</span>
+            <span *ngIf="katNumber.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="katNumber.hasError('pattern')">Dozwolone tylko cyfry i litery</span>
           </div>
         </li>
+
         <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="productDescription"><i class="fa fa-pencil-square-o"></i></span>
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <textarea formControlName="description" class="form-control" placeholder="Describe the Product - Max 150 Characters" aria-label="Description" aria-describedby="productDescription"></textarea>
+            <input type="text" id="platynaWeight" formControlName="platynaWeight" class="form-control" placeholder="Platyna" aria-label="name" aria-describedby="productTitle">
           </div>
-          <div class="errorMessage" *ngIf="description.touched && description.errors">
-            <span *ngIf="description.hasError('required')">Product Description is required.</span>
-            <span *ngIf="description.hasError('maxlength')">Only 150 characters allowed for Product Description.</span>
+          <div class="errorMessage" *ngIf="platynaWeight.touched && platynaWeight.errors">
+            <span *ngIf="platynaWeight.hasError('required')">Podaj zawartość platyny.</span>
+            <span *ngIf="platynaWeight.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="platynaWeight.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
           </div>
         </li>
+
         <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
-              <div class="input-group-text">
-                <input type="checkbox" formControlName="outOfStock" checked aria-label="Checkbox for following text input">
-              </div>
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input type="text" class="form-control" placeholder="Product In Stock" disabled>
+            <input type="text" id="palladWeight" formControlName="palladWeight" class="form-control" placeholder="Pallad" aria-label="name" aria-describedby="productTitle">
+          </div>
+          <div class="errorMessage" *ngIf="palladWeight.touched && palladWeight.errors">
+            <span *ngIf="palladWeight.hasError('required')">Podaj zawartość palladu.</span>
+            <span *ngIf="palladWeight.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="palladWeight.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
           </div>
         </li>
+
         <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text"><i class="fa fa-usd"></i></span>
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input formControlName="price" type="text" class="form-control" placeholder="eg: 999.99">
+            <input type="text" id="rodWeight" formControlName="rodWeight" class="form-control" placeholder="Rod" aria-label="name" aria-describedby="productTitle">
           </div>
-          <div class="errorMessage" *ngIf="price.touched && price.errors">
-            <span *ngIf="price.hasError('required')">Product Price is required.</span>
-            <span *ngIf="price.hasError('min')">Negative price Not allowed</span>
-            <span *ngIf="price.hasError('max')">Max price allowes is 10000</span>
+          <div class="errorMessage" *ngIf="rodWeight.touched && rodWeight.errors">
+            <span *ngIf="rodWeight.hasError('required')">Podaj zawartość rodu.</span>
+            <span *ngIf="rodWeight.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="rodWeight.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
           </div>
         </li>
+
+        <li class="list-group-item">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
+            </div>
+            <input type="text" id="katWeigthPerKg" formControlName="katWeigthPerKg" class="form-control" placeholder="Waga/Kg" aria-label="name" aria-describedby="productTitle">
+          </div>
+          <div class="errorMessage" *ngIf="katWeigthPerKg.touched && katWeigthPerKg.errors">
+            <span *ngIf="katWeigthPerKg.hasError('required')">Podaj wartość w kg.</span>
+            <span *ngIf="katWeigthPerKg.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="katWeigthPerKg.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
+          </div>
+        </li>
+
         <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="ImageUrl"><i class="fa fa-picture-o"></i></span>
             </div>
-            <input type="text" formControlName="imageUrl" class="form-control" placeholder="eg: https://i.imgur.com/ApYPYbQ.jpg" aria-label="ImageUrl" aria-describedby="productTitle">
+            <input type="text" formControlName="imageUrl" class="form-control" placeholder="np: https://i.imgur.com/ApYPYbQ" aria-label="ImageUrl" aria-describedby="productTitle">
           </div>
           <div class="errorMessage" *ngIf="imageUrl.touched && imageUrl.errors">
-            <span *ngIf="imageUrl.hasError('pattern')">Invalid image url.</span>
+            <span *ngIf="imageUrl.hasError('pattern')">Podałeś nieprawidłowy adres.</span>
           </div>
         </li>
-        <li class="list-group-item">
-          <button [disabled]="insertForm.invalid" class="btn btn-primary btn-block">ADD</button>
-        </li>
-      </ul>
 
+        <li class="list-group-item">
+          <button [disabled]="insertForm.invalid" class="btn btn-primary btn-block">Dodaj</button>
+        </li>
+
+      </ul>
+      <!-------------------------------------------------->
     </form>
 
   </div>
 </ng-template>
-
 <!-- ADD PRODUCT MODAL START-->
+
 <!-- EDIT PRODUCT MODAL START-->
 <ng-template #editTemplate>
   <div class="modal-header">
-    <h4 class="modal-title">EDIT PRODUCT DETAILS</h4>
+    <h4 class="modal-title">Edytuj katalizator</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -120,6 +147,8 @@
   <div class="modal-body text-center">
     <p class="list-group-item active text-center text-uppercase">{{modalMessage}}</p>
     <form [formGroup]="updateForm" (ngSubmit)="onUpdate()">
+
+      <!-------------------------------------------------->
       <ul class="list-group">
         <li class="list-group-item" [hidden]="_id">
           <div class="input-group">
@@ -128,71 +157,97 @@
             </div>
             <input type="text" class="form-control" formControlName="id" />
           </div>
-
         </li>
+
         <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input type="text" id="name" formControlName="name" class="form-control" placeholder="eg: Macbook Air 2019" aria-label="name" aria-describedby="productTitle">
+            <input type="text" id="_katNumber" formControlName="_katNumber" class="form-control" placeholder="Numer katalizatora" aria-label="name" aria-describedby="productTitle">
           </div>
-          <div *ngIf="_name.touched && _name.errors" class="errorMessage">
-            <span *ngIf="_name.hasError('required')">Product Name is required.</span>
-            <span *ngIf="_name.hasError('maxlength')">Only 50 characters allowed for Product Name.</span>
+          <div class="errorMessage" *ngIf="_katNumber.touched && _katNumber.errors" >
+            <span *ngIf="_katNumber.hasError('required')">Wymagany numer katalizatora.</span>
+            <span *ngIf="_katNumber.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="_katNumber.hasError('pattern')">Dozwolone tylko cyfry i litery</span>
           </div>
         </li>
+
         <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="productDescription"><i class="fa fa-pencil-square-o"></i></span>
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <textarea formControlName="description" class="form-control" placeholder="Describe the Product - Max 150 Characters" aria-label="Description" aria-describedby="productDescription"></textarea>
+            <input type="text" id="_platynaWeight" formControlName="_platynaWeight" class="form-control" placeholder="Platyna" aria-label="name" aria-describedby="productTitle">
           </div>
-          <div *ngIf="_description.touched && _description.errors" class="errorMessage">
-            <span *ngIf="_description.hasError('required')">Product Description is required.</span>
-            <span *ngIf="_description.hasError('maxlength')">Only 150 characters allowed for Product Description.</span>
+          <div class="errorMessage" *ngIf="_platynaWeight.touched && _platynaWeight.errors">
+            <span *ngIf="_platynaWeight.hasError('required')">Podaj zawartość platyny.</span>
+            <span *ngIf="_platynaWeight.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="_platynaWeight.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
           </div>
         </li>
+
         <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
-              <div class="input-group-text">
-                <input type="checkbox" formControlName="outOfStock" checked aria-label="Checkbox for following text input">
-              </div>
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input type="text" class="form-control" placeholder="Product In Stock" disabled>
+            <input type="text" id="_palladWeight" formControlName="_palladWeight" class="form-control" placeholder="Pallad" aria-label="name" aria-describedby="productTitle">
+          </div>
+          <div class="errorMessage" *ngIf="_palladWeight.touched && _palladWeight.errors">
+            <span *ngIf="_palladWeight.hasError('required')">Podaj zawartość palladu.</span>
+            <span *ngIf="_palladWeight.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="_palladWeight.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
           </div>
         </li>
+
         <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text"><i class="fa fa-usd"></i></span>
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input formControlName="price" type="text" class="form-control" placeholder="eg: 999.99">
+            <input type="text" id="_rodWeight" formControlName="_rodWeight" class="form-control" placeholder="Rod" aria-label="name" aria-describedby="productTitle">
           </div>
-          <div *ngIf="_price.touched && _price.errors" class="errorMessage">
-            <span *ngIf="_price.hasError('required')">Product Price is required.</span>
-            <span *ngIf="_price.hasError('min')">Negative price Not allowed</span>
-            <span *ngIf="_price.hasError('max')">Max price allowes is 10000</span>
+          <div class="errorMessage" *ngIf="_rodWeight.touched && _rodWeight.errors">
+            <span *ngIf="_rodWeight.hasError('required')">Podaj zawartość rodu.</span>
+            <span *ngIf="_rodWeight.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="_rodWeight.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
           </div>
         </li>
+
+        <li class="list-group-item">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
+            </div>
+            <input type="text" id="_katWeigthPerKg" formControlName="_katWeigthPerKg" class="form-control" placeholder="Waga/Kg" aria-label="name" aria-describedby="productTitle">
+          </div>
+          <div class="errorMessage" *ngIf="_katWeigthPerKg.touched && _katWeigthPerKg.errors">
+            <span *ngIf="_katWeigthPerKg.hasError('required')">Podaj wartość w kg.</span>
+            <span *ngIf="_katWeigthPerKg.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="_katWeigthPerKg.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
+          </div>
+        </li>
+
         <li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="ImageUrl"><i class="fa fa-picture-o"></i></span>
             </div>
-            <input type="text" formControlName="imageUrl" class="form-control" placeholder="eg: https://i.imgur.com/ApYPYbQ.jpg" aria-label="ImageUrl" aria-describedby="productTitle">
+            <input type="text" formControlName="_imageUrl" class="form-control" placeholder="np: https://i.imgur.com/ApYPYbQ" aria-label="ImageUrl" aria-describedby="productTitle">
           </div>
-          <div *ngIf="_imageUrl.touched && _imageUrl.errors"
-               class="errorMessage">
-            <span *ngIf="_imageUrl.hasError('pattern')">Invalid image url.</span>
+          <div class="errorMessage" *ngIf="_imageUrl.touched && _imageUrl.errors">
+            <span *ngIf="_imageUrl.hasError('pattern')">Podałeś nieprawidłowy adres.</span>
           </div>
         </li>
+
         <li class="list-group-item">
-          <button [disabled]="updateForm.invalid" class="btn btn-primary btn-block">UPDATE</button>
+          <button [disabled]="updateForm.invalid" class="btn btn-primary btn-block">Zaktualizauj</button>
         </li>
+
       </ul>
+      <!-------------------------------------------------->
+
 
     </form>
 
