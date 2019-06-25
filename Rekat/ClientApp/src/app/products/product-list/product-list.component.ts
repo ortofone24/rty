@@ -108,7 +108,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
     });
   }
 
-
   // Update on Existing Product
   onUpdate() {
 
@@ -131,7 +130,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       'palladWeight': this._palladWeight.value,
       'rodWeight': this._rodWeight.value,
       'katWeigthPerKg': this._katWeigthPerKg.value,
-      'imageUrl': this.imageUrl.value
+      'imageUrl': this._imageUrl.value
     });
 
     this.modalRef = this.modalService.show(this.editmodal);
@@ -190,13 +189,13 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
     this.updateForm = this.fb.group(
       {
+        'id': this._id,
         'katNumber': this._katNumber,
         'platynaWeight': this._platynaWeight,
         'palladWeight': this._palladWeight,
         'rodWeight': this._rodWeight,
-        'katWeightPerKg': this._katWeigthPerKg,
+        'katWeigthPerKg': this._katWeigthPerKg,
         'imageUrl': this._imageUrl,
-        'id': this._id
       });
 
   }
