@@ -28,10 +28,8 @@ export class ProductService {
     if (!this.product$) {
       this.product$ = this.http.get<Product[]>(this.baseUrl).pipe(shareReplay());
     }
-
     // if products cache exists return it
     return this.product$;
-
   }
 
   // Get Product by its ID
@@ -46,13 +44,11 @@ export class ProductService {
 
   // Update the Product
   updateProduct(id: number, editProduct: Product): Observable<Product> {
-
     return this.http.put<Product>(this.updateUrl + id, editProduct)
   }
 
   // Delete Product
   deleteProduct(id: number): Observable<any> {
-
     return this.http.delete(this.deleteUrl + id);
   }
 

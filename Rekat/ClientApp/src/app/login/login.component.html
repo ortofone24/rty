@@ -13,18 +13,18 @@
 
       <!-- LOGIN COLUMN START -->
       <div class="col-md-4 login-sec">
-        <h2 class="text-center">Login Now</h2>
+        <h2 class="text-center">Zaloguj się</h2>
         <!-- LOGIN FORM START -->
         <form class="login-form form" [formGroup]="insertForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
-            <label for="UserName" class="text-uppercase">Username</label>
+            <label for="UserName" class="text-uppercase">Nazwa użytkownika</label>
             <input formControlName="Username" type="text" class="form-control" placeholder="" required autofocus>
             <div *ngIf="Username.touched && Username.errors" class="errorMessage">
               <span *ngIf="Username.hasError('required')">Wymagana nazwa użytkownika.</span>
             </div>
           </div>
           <div class="form-group">
-            <label for="Password" class="text-uppercase">Password</label>
+            <label for="Password" class="text-uppercase">Hasło</label>
             <input formControlName="Password" type="password" class="form-control" placeholder="" required autofocus>
             <div *ngIf="Password.touched && Password.errors" class="errorMessage">
               <span *ngIf="Password.hasError('required')">Wymagane hasło.</span>
@@ -38,3 +38,5 @@
     </div>
   </div> <!-- LOGIN CONTAINER END -->
 </section><!-- LOGIN SECTION END -->
+
+

@@ -9,22 +9,22 @@
     <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
       <ul class="navbar-nav flex-grow-2">
         <li class="nav-item">
-          <a class="nav-link text-dark" [routerLink]='["/"]'>Home</a>
+          <a class="nav-link text-dark" [routerLink]='["/"]'>Strona główna</a>
         </li>
         <li class="nav-item" *ngIf="(LoginStatus$ | async) as LoginStatus">
-          <a class="nav-link text-dark" [routerLink]='["/products"]' *ngIf="LoginStatus">Products</a>
+          <a class="nav-link text-dark" [routerLink]='["/products"]' *ngIf="LoginStatus">Katalizatory</a>
         </li>
         <li class="nav-item" *ngIf="!(LoginStatus$ | async) as LoginStatus">
-          <a class="nav-link text-dark" *ngIf="LoginStatus" [routerLink]='["/login"]'>Login</a>
+          <a class="nav-link text-dark" *ngIf="LoginStatus" [routerLink]='["/login"]'>Zaloguj</a>
         </li>
-        <li class="nav-item" *ngIf="!(LoginStatus$ | async) as LoginStatus">
+        <!--<li class="nav-item" *ngIf="!(LoginStatus$ | async) as LoginStatus">
           <a class="nav-link text-dark" *ngIf="LoginStatus" [routerLink]='["/register"]'>Register</a>
-        </li>
+        </li>-->
         <li class="nav-item" *ngIf="(LoginStatus$ | async) as LoginStatus">
           <a class="nav-link text-danger" *ngIf="(UserName$ | async) as UserName">{{UserName | uppercase}}</a>
         </li>
         <li class="nav-item" *ngIf="(LoginStatus$ | async) as LoginStatus">
-          <a class="btn btn-primary text-white" (click)="onLogout()" *ngIf="LoginStatus">Logout</a>
+          <a class="btn btn-primary text-white" (click)="onLogout()" *ngIf="LoginStatus">Wyloguj</a>
         </li>
       </ul>
     </div>
