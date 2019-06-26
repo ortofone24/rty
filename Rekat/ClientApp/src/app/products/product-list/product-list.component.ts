@@ -5,6 +5,8 @@ import { Product } from '../../interfaces/product';
 import { Observable, Subject } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
 import { ProductService } from '../../services/product.service';
+import { Router } from '@angular/router';
+import { AccountService } from '../../services/account.service';
 //import * as jwt_decode from "jwt-decode";
 
 @Component({
@@ -35,11 +37,15 @@ export class ProductListComponent implements OnInit, OnDestroy {
   _katWeigthPerKg: FormControl;
   _id: FormControl;
 
+
   // Add Modal
   @ViewChild('template') modal: TemplateRef<any>;
 
   // Update Modal
   @ViewChild('editTemplate') editmodal: TemplateRef<any>;
+
+  // Delete Modal
+  @ViewChild('deleteTemplate') deletemodal: TemplateRef<any>;
 
 
   // Modal properties
@@ -68,7 +74,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
   constructor(private productservice: ProductService,
     private modalService: BsModalService,
     private fb: FormBuilder,
-    private chRef: ChangeDetectorRef) { }
+    private chRef: ChangeDetectorRef,
+    private router: Router,
+    private acct: AccountService,
+  ) { }
 
   onAddProduct() {
     this.modalRef = this.modalService.show(this.modal);
@@ -118,8 +127,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
         this.productservice.clearCache();
         this.products$ = this.productservice.getProducts();
 
-        this.products$.subscribe(updatedlist =>
-        {
+        this.products$.subscribe(updatedlist => {
           this.products = updatedlist;
           this.modalRef.hide();
           this.rerender();
@@ -154,6 +162,26 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   }
 
+  // Method to delete product
+  onDelete(product: Product): void {
+    if (confirm("Czy napewno chcesz usunąć?")) {
+      this.productservice.deleteProduct(product.katId).subscribe(result => {
+        this.productservice.clearCache();
+        this.products$ = this.productservice.getProducts();
+        this.products$.subscribe(newlist => {
+          this.products = newlist;
+          this.rerender();
+        })
+      })
+    }
+  }
+
+  // Method to select the product
+  onSelect(product: Product): void {
+    this.selectedProduct = product;
+    this.router.navigateByUrl("/products/" + product.katId);
+  }
+
   ngOnInit() {
     this.dtOptions =
       {
@@ -172,6 +200,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
       this.dtTrigger.next();
     });
 
+    this.acct.currentUserRole.subscribe(result =>
+    {
+      this.userRoleStatus = result;
+    });
+
     // Modal Message
     this.modalMessage = "Wypełnij wszystkie pola";
 
@@ -183,7 +216,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.palladWeight = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
     this.rodWeight = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
     this.katWeigthPerKg = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
-    this.imageUrl = new FormControl('', [Validators.pattern(validateImageUrl)]);
+    this.imageUrl = new FormControl('', [Validators.required, Validators.pattern(validateImageUrl)]);
 
     this.insertForm = this.fb.group(
       {
@@ -201,7 +234,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this._palladWeight = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
     this._rodWeight = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
     this._katWeigthPerKg = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
-    this._imageUrl = new FormControl('', [Validators.pattern(validateImageUrl)]);
+    this._imageUrl = new FormControl('', [Validators.required, Validators.pattern(validateImageUrl)]);
     this._id = new FormControl();
 
     this.updateForm = this.fb.group(
@@ -214,7 +247,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
         'katWeigthPerKg': this._katWeigthPerKg,
         'imageUrl': this._imageUrl,
       });
-
   }
 
   ngOnDestroy() {

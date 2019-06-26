@@ -1,13 +1,13 @@
 <div class="container-fluid">
 
-  <button class="btn btn-warning mb-3 float-right text-uppercase" (click)="onAddProduct()"><i class="fa fa-plus"></i> Dodaj katalizator</button>
+  <button class="btn btn-warning mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddProduct()"><i class="fa fa-plus"></i> Dodaj katalizator</button>
   <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered row-border hover" style="width:100%">
     <thead class="text-center thead-dark">
       <tr>
         <th>Numer</th>
         <th>Cena</th>
         <th>Zdjęcie</th>
-        <th>Dodaj/Edytuj/Usuń</th>
+        <th>Wyświetl/Edytuj/Usuń</th>
       </tr>
     </thead>
     <tbody>
@@ -17,10 +17,10 @@
         <td><img [src]="product.imageUrl" *ngIf="product.imageUrl" style="float:none" width="75" /></td>
         <td>
           <div class="btn-group mt-2" role="group">
-            <button type="button" class="btn btn-success"><i class="fas fa-list"></i></button>
-            <button type="button" class="btn btn-primary" (click)="onUpdateModal(product)"><i class="fas fa-edit"></i></button>
-            <button type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
-          </div>
+            <button type="button" class="btn btn-success" (click)="onSelect(product)"><i class="fas fa-list"></i></button>
+            <button type="button" class="btn btn-primary" *ngIf="userRoleStatus == 'Admin'" (click)="onUpdateModal(product)"><i class="fas fa-edit"></i></button>
+            <button type="button" class="btn btn-danger" *ngIf="userRoleStatus == 'Admin'" (click)="onDelete(product)"><i class="fas fa-trash-alt"></i></button>
+           </div>
         </td>
       </tr>
     </tbody>
@@ -120,6 +120,7 @@
             <input type="text" formControlName="imageUrl" class="form-control" placeholder="np: https://i.imgur.com/ApYPYbQ" aria-label="ImageUrl" aria-describedby="productTitle">
           </div>
           <div class="errorMessage" *ngIf="imageUrl.touched && imageUrl.errors">
+            <span *ngIf="imageUrl.hasError('required')">Podaj adres zdjecia</span>
             <span *ngIf="imageUrl.hasError('pattern')">Podałeś nieprawidłowy adres.</span>
           </div>
         </li>
@@ -166,7 +167,7 @@
             </div>
             <input type="text" id="katNumber" formControlName="katNumber" class="form-control" placeholder="Numer katalizatora" aria-label="name" aria-describedby="productTitle">
           </div>
-          <div class="errorMessage" *ngIf="_katNumber.touched && _katNumber.errors" >
+          <div class="errorMessage" *ngIf="_katNumber.touched && _katNumber.errors">
             <span *ngIf="_katNumber.hasError('required')">Wymagany numer katalizatora.</span>
             <span *ngIf="_katNumber.hasError('maxlength')">Dozwolone 10 znaków.</span>
             <span *ngIf="_katNumber.hasError('pattern')">Dozwolone tylko cyfry i litery</span>
@@ -237,6 +238,7 @@
             <input type="text" formControlName="imageUrl" class="form-control" placeholder="np: https://i.imgur.com/ApYPYbQ" aria-label="ImageUrl" aria-describedby="productTitle">
           </div>
           <div class="errorMessage" *ngIf="_imageUrl.touched && _imageUrl.errors">
+            <span *ngIf="_imageUrl.hasError('required')">Podaj adres zdjecia</span>
             <span *ngIf="_imageUrl.hasError('pattern')">Podałeś nieprawidłowy adres.</span>
           </div>
         </li>
@@ -253,5 +255,7 @@
 
   </div>
 </ng-template>
-
 <!-- EDIT PRODUCT MODAL END-->
+
+
+
