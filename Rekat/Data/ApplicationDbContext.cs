@@ -23,6 +23,8 @@ namespace Rekat.Data
                     new { Id = "2", Name = "Customer", NormalizedName = "CUSTOMER" }
                 );
         }
+
         public DbSet<ProductModel> Products { get; set; }
+        public DbSet<ImageModel> ImagesTempUrl { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 <div class="container-fluid">
-
   <button class="btn btn-warning mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddProduct()"><i class="fa fa-plus"></i> Dodaj katalizator</button>
+  <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddProduct()"><i class="fa fa-plus"></i> Ceny pierwiastków</button>
   <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered row-border hover" style="width:100%">
     <thead class="text-center thead-dark">
       <tr>
@@ -20,12 +20,13 @@
             <button type="button" class="btn btn-success" (click)="onSelect(product)"><i class="fas fa-list"></i></button>
             <button type="button" class="btn btn-primary" *ngIf="userRoleStatus == 'Admin'" (click)="onUpdateModal(product)"><i class="fas fa-edit"></i></button>
             <button type="button" class="btn btn-danger" *ngIf="userRoleStatus == 'Admin'" (click)="onDelete(product)"><i class="fas fa-trash-alt"></i></button>
-           </div>
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
+
 
 
 <!-- ADD PRODUCT MODAL START-->
@@ -112,7 +113,7 @@
           </div>
         </li>
 
-        <li class="list-group-item">
+        <!--<li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="ImageUrl"><i class="fa fa-picture-o"></i></span>
@@ -123,19 +124,23 @@
             <span *ngIf="imageUrl.hasError('required')">Podaj adres zdjecia</span>
             <span *ngIf="imageUrl.hasError('pattern')">Podałeś nieprawidłowy adres.</span>
           </div>
+        </li>-->
+
+        <li class="list-group-item">
+          <img [src]="imagePreview" style="width: 250px; height: 200px">
+          <input type="file" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
+          <!--<button type="submit" class="btn-large btn-submit" [disabled]="Image.value=='' || !imageForm.valid">Submit</button>-->
         </li>
 
         <li class="list-group-item">
-          <button [disabled]="insertForm.invalid" class="btn btn-primary btn-block">Dodaj</button>
+          <button [disabled]="insertForm.invalid || Image.value==''" class="btn btn-primary btn-block">Dodaj</button>
         </li>
-
       </ul>
       <!-------------------------------------------------->
     </form>
-
   </div>
 </ng-template>
-<!-- ADD PRODUCT MODAL START-->
+<!-- ADD PRODUCT MODAL END-->
 
 <!-- EDIT PRODUCT MODAL START-->
 <ng-template #editTemplate>
@@ -150,6 +155,7 @@
     <form [formGroup]="updateForm" (ngSubmit)="onUpdate()">
 
       <!-------------------------------------------------->
+
       <ul class="list-group">
         <li class="list-group-item" [hidden]="_id">
           <div class="input-group">
@@ -230,7 +236,7 @@
           </div>
         </li>
 
-        <li class="list-group-item">
+        <!--<li class="list-group-item">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="ImageUrl"><i class="fa fa-picture-o"></i></span>
@@ -241,21 +247,17 @@
             <span *ngIf="_imageUrl.hasError('required')">Podaj adres zdjecia</span>
             <span *ngIf="_imageUrl.hasError('pattern')">Podałeś nieprawidłowy adres.</span>
           </div>
-        </li>
+        </li>-->
 
         <li class="list-group-item">
           <button [disabled]="updateForm.invalid" class="btn btn-primary btn-block">Zaktualizauj</button>
         </li>
-
       </ul>
-      <!-------------------------------------------------->
 
+      <!-------------------------------------------------->
 
     </form>
 
   </div>
 </ng-template>
 <!-- EDIT PRODUCT MODAL END-->
-
-
-

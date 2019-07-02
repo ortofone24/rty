@@ -27,11 +27,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190701205346_4.add_ImageModel.cs" />
+    <Compile Remove="Migrations\20190701205346_4.add_ImageModel.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="ClientApp\src\app\_helpers\jwt.Interceptor.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="ClientApp\src\app\products\" />
+    <Folder Include="wwwroot\picturesKat\" />
   </ItemGroup>
 
   <ItemGroup>

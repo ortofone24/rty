@@ -7,20 +7,25 @@ import { DataTableDirective } from 'angular-datatables';
 import { ProductService } from '../../services/product.service';
 import { Router } from '@angular/router';
 import { AccountService } from '../../services/account.service';
+import { UploadImageService } from '../../services/upload-image.service';
 //import * as jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  styleUrls: ['./product-list.component.css'],
+  providers: [UploadImageService]
 })
 export class ProductListComponent implements OnInit, OnDestroy {
+
+  imagePreview: string = "/images/iconsFolder.png";
+  fileToUpload: File = null;
 
   // For the FormControl - Adding products
   insertForm: FormGroup;
   katNumber: FormControl;
   //katPrice: FormControl;
-  imageUrl: FormControl;
+  //imageUrl: FormControl;
   platynaWeight: FormControl;
   palladWeight: FormControl;
   rodWeight: FormControl;
@@ -43,9 +48,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   // Update Modal
   @ViewChild('editTemplate') editmodal: TemplateRef<any>;
-
-  // Delete Modal
-  @ViewChild('deleteTemplate') deletemodal: TemplateRef<any>;
 
 
   // Modal properties
@@ -77,14 +79,26 @@ export class ProductListComponent implements OnInit, OnDestroy {
     private chRef: ChangeDetectorRef,
     private router: Router,
     private acct: AccountService,
+    private imageService: UploadImageService
   ) { }
+
 
   onAddProduct() {
     this.modalRef = this.modalService.show(this.modal);
   }
 
   // Method to Add new Product
-  onSubmit() {
+  onSubmit(Image) {
+           
+    console.log('odpalilem funkcje');
+    this.imageService.postFile(this.fileToUpload).subscribe(
+      data =>
+      {
+        console.log('done');
+      }
+    )
+
+
     let newProduct = this.insertForm.value;
 
     this.productservice.insertProduct(newProduct).subscribe(
@@ -159,7 +173,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
     });
 
     this.modalRef = this.modalService.show(this.editmodal);
-
   }
 
   // Method to delete product
@@ -181,6 +194,19 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.selectedProduct = product;
     this.router.navigateByUrl("/products/" + product.katId);
   }
+
+
+  // Display preview image
+  handleFileInput(file: FileList) {
+    this.fileToUpload = file.item(0);
+
+    //Show image preview
+    var reader = new FileReader();
+    reader.onload = (event: any) => {
+      this.imagePreview = event.target.result;
+    }
+    reader.readAsDataURL(this.fileToUpload);
+  } 
 
   ngOnInit() {
     this.dtOptions =
@@ -216,7 +242,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.palladWeight = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
     this.rodWeight = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
     this.katWeigthPerKg = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
-    this.imageUrl = new FormControl('', [Validators.required, Validators.pattern(validateImageUrl)]);
+    //this.imageUrl = new FormControl('', [Validators.required, Validators.pattern(validateImageUrl)]);
 
     this.insertForm = this.fb.group(
       {
@@ -225,7 +251,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
         'palladWeight': this.palladWeight,
         'rodWeight': this.rodWeight,
         'katWeigthPerKg': this.katWeigthPerKg,
-        'imageUrl': this.imageUrl
+        //'imageUrl': this.imageUrl
       });
 
     // Initializing Update product properties

@@ -5,7 +5,10 @@ using Rekat.Data;
 using Rekat.Models;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.IO;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Rekat.Controllers
@@ -15,9 +18,15 @@ namespace Rekat.Controllers
     {
         private readonly ApplicationDbContext _db;
 
-        public ProductController(ApplicationDbContext db)
+        private readonly IHostingEnvironment _env;
+
+        private readonly IHttpContextAccessor _accessor;
+
+        public ProductController(ApplicationDbContext db, IHostingEnvironment env, IHttpContextAccessor accessor)
         {
             _db = db;
+            _env = env;
+            _accessor = accessor;
         }
 
         // GET: api/<controller>
@@ -28,19 +37,62 @@ namespace Rekat.Controllers
             return Ok(_db.Products.ToList());
         }
 
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> UploadImage()
+        {
+            string imageName = null;
+            var httpRequest = _accessor.HttpContext.Request;
+            var webRoot = _env.WebRootPath;
+            var findTempImage = _db.ImagesTempUrl.FirstOrDefault(p => p.ImageId == 1);
+
+            //Upload Image
+            var postedFile = httpRequest.Form.Files["Image"];
+
+            //Create Custom filename
+            imageName = new String(Path.GetFileNameWithoutExtension(postedFile.FileName).Take(5).ToArray()).Replace(" ", "-");
+            imageName += DateTime.Now.ToString("yymmssfff") + Path.GetExtension(postedFile.FileName);
+
+            var filePath = Path.Combine(webRoot + "\\" + "picturesKat\\" + imageName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await postedFile.CopyToAsync(stream);
+            };
+
+            var image = new ImageModel()
+            {
+                //ImageId = 1,
+                //ImageTempUrl = filePath
+                ImageTempUrl = "http://www.rekat.pl/images/tor.png"
+            };
+
+            //findTempImage.ImageId = image.ImageId;
+            findTempImage.ImageTempUrl = image.ImageTempUrl;
+
+            _db.Entry(findTempImage).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+
+            return Ok(100);
+        }
+
+
         [HttpPost("[action]")]
         [Authorize(Policy = "RequiredAdministratorRole")]
         public async Task<IActionResult> AddProduct([FromBody] ProductModel formdata)
         {
+            var findTempImage2 = _db.ImagesTempUrl.FirstOrDefault(p => p.ImageId == 1);
+            string imageUrl = findTempImage2.ImageTempUrl;
+
             var newproduct = new ProductModel
             {
-                ImageUrl = formdata.ImageUrl,
+                ImageUrl = imageUrl,
                 KatNumber = formdata.KatNumber,
                 PlatynaWeight = formdata.PlatynaWeight,
                 PalladWeight = formdata.PalladWeight,
                 RodWeight = formdata.RodWeight,
-                KatPrice = formdata.KatPrice,
-                KatWeigthPerKg = formdata.KatWeigthPerKg
+                KatWeigthPerKg = formdata.KatWeigthPerKg,
+                KatPrice = (double)formdata.PalladWeight + (double)formdata.PlatynaWeight
             };
 
             await _db.Products.AddAsync(newproduct);
@@ -72,8 +124,8 @@ namespace Rekat.Controllers
             findProduct.PlatynaWeight = formdata.PlatynaWeight;
             findProduct.PalladWeight = formdata.PalladWeight;
             findProduct.RodWeight = formdata.RodWeight;
-            findProduct.KatPrice = formdata.KatPrice;
             findProduct.KatWeigthPerKg = formdata.KatWeigthPerKg;
+            findProduct.KatPrice = (double)formdata.PalladWeight + (double)formdata.PlatynaWeight;
 
             _db.Entry(findProduct).State = EntityState.Modified;
             await _db.SaveChangesAsync();
