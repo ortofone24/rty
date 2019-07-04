@@ -1,6 +1,8 @@
 <div class="container-fluid">
   <button class="btn btn-warning mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddProduct()"><i class="fa fa-plus"></i> Dodaj katalizator</button>
   <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddPierwiastkiPrice()"><i class="fa fa-plus"></i> Ceny pierwiastków</button>
+  <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'"><i class="fa fa-plus"></i> Przelicz ceny</button>
+  <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'"><i class="fa fa-plus"></i> Dodaj użytkownika</button>
   <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered row-border hover" style="width:100%">
     <thead class="text-center thead-dark">
       <tr>
@@ -165,6 +167,9 @@
         </li>
 
         <li class="list-group-item">
+          <div>
+            <h6>Numer katalizatora</h6>
+          </div>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
@@ -179,6 +184,9 @@
         </li>
 
         <li class="list-group-item">
+          <div>
+            <h6>Platyna</h6>
+          </div>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
@@ -193,6 +201,9 @@
         </li>
 
         <li class="list-group-item">
+          <div>
+            <h6>Pallad</h6>
+          </div>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
@@ -207,6 +218,9 @@
         </li>
 
         <li class="list-group-item">
+          <div>
+            <h6>Rod</h6>
+          </div>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
@@ -221,6 +235,9 @@
         </li>
 
         <li class="list-group-item">
+          <div>
+            <h6>Waga/Kg</h6>
+          </div>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>

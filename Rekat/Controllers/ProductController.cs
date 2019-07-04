@@ -75,13 +75,17 @@ namespace Rekat.Controllers
         }
 
 
-
         [HttpPost("[action]")]
         [Authorize(Policy = "RequiredAdministratorRole")]
         public async Task<IActionResult> AddProduct([FromBody] ProductModel formdata)
         {
             var findTempImage2 = _db.ImagesTempUrl.FirstOrDefault(p => p.ImageId == 1);
             string imageUrl = findTempImage2.ImageTempUrl;
+
+            var findPierwiastkiPrice = _db.CenyPierwiastkow.FirstOrDefault(p => p.PriceId == 1);
+            double platynaPrice = findPierwiastkiPrice.PlatynaPrice;
+            double palladPrice = findPierwiastkiPrice.PalladPrice;
+            double rodPrice = findPierwiastkiPrice.RodPrice;
 
             var newproduct = new ProductModel
             {
@@ -91,7 +95,9 @@ namespace Rekat.Controllers
                 PalladWeight = formdata.PalladWeight,
                 RodWeight = formdata.RodWeight,
                 KatWeigthPerKg = formdata.KatWeigthPerKg,
-                KatPrice = (double)formdata.PalladWeight + (double)formdata.PlatynaWeight
+                KatPrice = (((double)platynaPrice * (double)formdata.PlatynaWeight) + 
+                           ((double)palladPrice * (double)formdata.PalladWeight) + 
+                           ((double)rodPrice * (double)formdata.RodWeight)) * (double)formdata.KatWeigthPerKg
             };
 
             await _db.Products.AddAsync(newproduct);
