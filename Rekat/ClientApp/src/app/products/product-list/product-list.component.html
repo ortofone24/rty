@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <button class="btn btn-warning mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddProduct()"><i class="fa fa-plus"></i> Dodaj katalizator</button>
-  <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddProduct()"><i class="fa fa-plus"></i> Ceny pierwiastków</button>
+  <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddPierwiastkiPrice()"><i class="fa fa-plus"></i> Ceny pierwiastków</button>
   <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered row-border hover" style="width:100%">
     <thead class="text-center thead-dark">
       <tr>
@@ -37,8 +37,24 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
+
   <div class="modal-body text-center">
     <p class="list-group-item active text-center text-uppercase">{{modalMessage}}</p>
+
+    <form #imageForm=ngForm (ngSubmit)="onPostClick(Image)">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <img [src]="imagePreview" style="width: 250px; height: 200px">
+          <input type="file" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
+
+          <br />
+          <br />
+
+          <button type="submit" class="btn-large  btn-submit" [disabled]="Image.value==''">Zatwierdź zdjęcie</button>
+        </li>
+      </ul>
+    </form>
+
     <form [formGroup]="insertForm" (ngSubmit)="onSubmit()">
       <!------------------------------------------------->
       <ul class="list-group">
@@ -113,31 +129,13 @@
           </div>
         </li>
 
-        <!--<li class="list-group-item">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="ImageUrl"><i class="fa fa-picture-o"></i></span>
-            </div>
-            <input type="text" formControlName="imageUrl" class="form-control" placeholder="np: https://i.imgur.com/ApYPYbQ" aria-label="ImageUrl" aria-describedby="productTitle">
-          </div>
-          <div class="errorMessage" *ngIf="imageUrl.touched && imageUrl.errors">
-            <span *ngIf="imageUrl.hasError('required')">Podaj adres zdjecia</span>
-            <span *ngIf="imageUrl.hasError('pattern')">Podałeś nieprawidłowy adres.</span>
-          </div>
-        </li>-->
-
-        <li class="list-group-item">
-          <img [src]="imagePreview" style="width: 250px; height: 200px">
-          <input type="file" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
-          <!--<button type="submit" class="btn-large btn-submit" [disabled]="Image.value=='' || !imageForm.valid">Submit</button>-->
-        </li>
-
         <li class="list-group-item">
           <button [disabled]="insertForm.invalid || Image.value==''" class="btn btn-primary btn-block">Dodaj</button>
         </li>
       </ul>
       <!-------------------------------------------------->
     </form>
+
   </div>
 </ng-template>
 <!-- ADD PRODUCT MODAL END-->
@@ -236,19 +234,6 @@
           </div>
         </li>
 
-        <!--<li class="list-group-item">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="ImageUrl"><i class="fa fa-picture-o"></i></span>
-            </div>
-            <input type="text" formControlName="imageUrl" class="form-control" placeholder="np: https://i.imgur.com/ApYPYbQ" aria-label="ImageUrl" aria-describedby="productTitle">
-          </div>
-          <div class="errorMessage" *ngIf="_imageUrl.touched && _imageUrl.errors">
-            <span *ngIf="_imageUrl.hasError('required')">Podaj adres zdjecia</span>
-            <span *ngIf="_imageUrl.hasError('pattern')">Podałeś nieprawidłowy adres.</span>
-          </div>
-        </li>-->
-
         <li class="list-group-item">
           <button [disabled]="updateForm.invalid" class="btn btn-primary btn-block">Zaktualizauj</button>
         </li>
@@ -261,3 +246,91 @@
   </div>
 </ng-template>
 <!-- EDIT PRODUCT MODAL END-->
+
+
+<!-- ADD PIERWIASTKI PRICE-->
+<ng-template #templatePierwiastki>
+  <div class="modal-header">
+    <h4 class="modal-title">Aktualizuj ceny pierwiastków</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <table class="table table-bordered row-border hover" style="width:100%">
+    <thead class="text-center thead-dark">
+      <tr>
+        <th>Pallad</th>
+        <th>Rod</th>
+        <th>Platyna</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let prices of pierwiastkiPrice">
+        <td align="center">{{prices.palladPrice}}</td>
+        <td align="center">{{prices.rodPrice}}</td>
+        <td align="center">{{prices.platynaPrice}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="modal-body text-center">
+    <p class="list-group-item active text-center text-uppercase"></p>
+
+
+    <form [formGroup]="pierwiastkiForm" (ngSubmit)="onSubmitPierwiastki()">
+      <!------------------------------------------------->
+      <ul class="list-group">
+
+        <li class="list-group-item">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
+            </div>
+            <input type="text" id="palladPrice" formControlName="palladPrice" class="form-control" placeholder="cena palladu" aria-label="name" aria-describedby="productTitle">
+          </div>
+          <div class="errorMessage" *ngIf="palladPrice.touched && palladPrice.errors">
+            <span *ngIf="palladPrice.hasError('required')">Podaj cenę palladu.</span>
+            <span *ngIf="palladPrice.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="palladPrice.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
+            </div>
+            <input type="text" id="rodPrice" formControlName="rodPrice" class="form-control" placeholder="cena rodu" aria-label="name" aria-describedby="productTitle">
+          </div>
+          <div class="errorMessage" *ngIf="rodPrice.touched && rodPrice.errors">
+            <span *ngIf="rodPrice.hasError('required')">Podaj cenę palladu.</span>
+            <span *ngIf="rodPrice.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="rodPrice.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
+            </div>
+            <input type="text" id="platynaPrice" formControlName="platynaPrice" class="form-control" placeholder="cena platyny" aria-label="name" aria-describedby="productTitle">
+          </div>
+          <div class="errorMessage" *ngIf="platynaPrice.touched && platynaPrice.errors">
+            <span *ngIf="platynaPrice.hasError('required')">Podaj cenę palladu.</span>
+            <span *ngIf="platynaPrice.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="platynaPrice.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <button [disabled]="pierwiastkiForm.invalid" class="btn btn-primary btn-block">Aktualizuj ceny</button>
+        </li>
+      </ul>
+      <!-------------------------------------------------->
+    </form>
+
+  </div>
+</ng-template>
+<!--END PIERWIASTKI PRICE-->

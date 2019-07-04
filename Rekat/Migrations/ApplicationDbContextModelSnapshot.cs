@@ -208,6 +208,23 @@ namespace Rekat.Migrations
                     b.ToTable("ImagesTempUrl");
                 });
 
+            modelBuilder.Entity("Rekat.Models.PierwiastkiPriceModel", b =>
+                {
+                    b.Property<int>("PriceId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("PalladPrice");
+
+                    b.Property<double>("PlatynaPrice");
+
+                    b.Property<double>("RodPrice");
+
+                    b.HasKey("PriceId");
+
+                    b.ToTable("CenyPierwiastkow");
+                });
+
             modelBuilder.Entity("Rekat.Models.ProductModel", b =>
                 {
                     b.Property<int>("KatId")

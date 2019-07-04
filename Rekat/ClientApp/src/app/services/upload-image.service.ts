@@ -9,7 +9,6 @@ export class UploadImageService {
   constructor(private http: HttpClient) { }
 
   postFile(fileToUpload: File) {
-    //const endpoint = 'https://localhost:44316/api/image/uploadimage';
     const endpoint = 'https://localhost:44377/api/product/uploadimage';
     const formData: FormData = new FormData();
     formData.append('Image', fileToUpload, fileToUpload.name);

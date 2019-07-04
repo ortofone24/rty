@@ -8,18 +8,23 @@ import { ProductService } from '../../services/product.service';
 import { Router } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { UploadImageService } from '../../services/upload-image.service';
+import { PierwiastkiPrice } from '../../interfaces/pierwiastki-price';
+import { PierwiastkiPriceService } from '../../services/pierwiastki-price.service';
+import { error } from 'util';
 //import * as jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
-  providers: [UploadImageService]
+  providers: [UploadImageService, PierwiastkiPriceService]
+  
 })
 export class ProductListComponent implements OnInit, OnDestroy {
 
   imagePreview: string = "/images/iconsFolder.png";
   fileToUpload: File = null;
+  
 
   // For the FormControl - Adding products
   insertForm: FormGroup;
@@ -42,6 +47,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
   _katWeigthPerKg: FormControl;
   _id: FormControl;
 
+  // Updating pierwiastki price
+  pierwiastkiForm: FormGroup;
+  palladPrice: FormControl;
+  rodPrice: FormControl;
+  platynaPrice: FormControl;
 
   // Add Modal
   @ViewChild('template') modal: TemplateRef<any>;
@@ -49,6 +59,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
   // Update Modal
   @ViewChild('editTemplate') editmodal: TemplateRef<any>;
 
+  // Pierwiastki price Modal
+  @ViewChild('templatePierwiastki') pierwiastkimodal: TemplateRef<any>;
 
   // Modal properties
   modalMessage: string;
@@ -57,6 +69,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   products$: Observable<Product[]>;
   products: Product[] = [];
   userRoleStatus: string;
+
+  pierwiastkiPrice$: Observable<PierwiastkiPrice[]>;
+  pierwiastkiPrice: PierwiastkiPrice[] = [];
 
   // Datables Properties
   dtOptions: DataTables.Settings = {};
@@ -79,7 +94,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
     private chRef: ChangeDetectorRef,
     private router: Router,
     private acct: AccountService,
-    private imageService: UploadImageService
+    private imageService: UploadImageService,
+    private pierwiastkiPriceService: PierwiastkiPriceService
   ) { }
 
 
@@ -87,17 +103,46 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.show(this.modal);
   }
 
-  // Method to Add new Product
-  onSubmit(Image) {
-           
+  onAddPierwiastkiPrice() {
+    this.modalRef = this.modalService.show(this.pierwiastkimodal);
+  }
+
+
+  // Post file to the server
+  onPostClick(Image)
+  {
     console.log('odpalilem funkcje');
     this.imageService.postFile(this.fileToUpload).subscribe(
-      data =>
-      {
+      data => {
         console.log('done');
       }
     )
+  }
 
+  // Method to Add new Price of pierwiastki
+  onSubmitPierwiastki() {
+    let newPrice = this.pierwiastkiForm.value;
+
+    this.pierwiastkiPriceService.insertPrice(newPrice).subscribe(
+      result => {
+        this.pierwiastkiPriceService.clearCache();
+        this.pierwiastkiPrice$ = this.pierwiastkiPriceService.getPrice();
+
+        this.pierwiastkiPrice$.subscribe(newlist => {
+          this.pierwiastkiPrice = newlist;
+          this.modalRef.hide();
+          this.pierwiastkiForm.reset();
+          this.rerender();
+        });
+        console.log("Dodałeś cenę");
+      },
+      error => console.log("Nie udało Ci się dodać")
+    )
+  }
+
+
+  // Method to Add new Product
+  onSubmit() {
 
     let newProduct = this.insertForm.value;
 
@@ -216,6 +261,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
         autoWidth: true,
         order: [[0, 'des']],
       };
+
+    // Products assigment
     this.products$ = this.productservice.getProducts();
 
     this.products$.subscribe(result => {
@@ -226,6 +273,16 @@ export class ProductListComponent implements OnInit, OnDestroy {
       this.dtTrigger.next();
     });
 
+    //Pierwiastki price assigment
+    this.pierwiastkiPrice$ = this.pierwiastkiPriceService.getPrice();
+
+    this.pierwiastkiPrice$.subscribe(result => {
+      this.pierwiastkiPrice = result;
+
+      this.chRef.detectChanges();
+      
+    });
+
     this.acct.currentUserRole.subscribe(result =>
     {
       this.userRoleStatus = result;
@@ -233,6 +290,18 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
     // Modal Message
     this.modalMessage = "Wypełnij wszystkie pola";
+
+    // Initializing add pierwiastkiPrice properties
+    this.palladPrice = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
+    this.rodPrice = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
+    this.platynaPrice = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
+
+    this.pierwiastkiForm = this.fb.group({
+      'palladPrice': this.palladPrice,
+      'rodPrice': this.rodPrice,
+      'platynaPrice': this.platynaPrice,
+
+    });
 
     // Initializing Add product properties
     let validateImageUrl: string = '^(https?:\/\/.*\.(?:png|jpg))$';

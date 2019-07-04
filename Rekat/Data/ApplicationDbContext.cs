@@ -26,5 +26,6 @@ namespace Rekat.Data
 
         public DbSet<ProductModel> Products { get; set; }
         public DbSet<ImageModel> ImagesTempUrl { get; set; }
+        public DbSet<PierwiastkiPriceModel> CenyPierwiastkow { get; set; }
     }
 }

@@ -62,9 +62,7 @@ namespace Rekat.Controllers
 
             var image = new ImageModel()
             {
-                //ImageId = 1,
-                //ImageTempUrl = filePath
-                ImageTempUrl = "http://www.rekat.pl/images/tor.png"
+                ImageTempUrl = filePath
             };
 
             //findTempImage.ImageId = image.ImageId;
@@ -75,6 +73,7 @@ namespace Rekat.Controllers
 
             return Ok(100);
         }
+
 
 
         [HttpPost("[action]")]
