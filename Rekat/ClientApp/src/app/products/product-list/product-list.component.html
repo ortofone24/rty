@@ -2,7 +2,6 @@
   <button class="btn btn-warning mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddProduct()"><i class="fa fa-plus"></i> Dodaj katalizator</button>
   <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddPierwiastkiPrice()"><i class="fa fa-plus"></i> Ceny pierwiastków</button>
   <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'"><i class="fa fa-plus"></i> Przelicz ceny</button>
-  <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'"><i class="fa fa-plus"></i> Dodaj użytkownika</button>
   <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered row-border hover" style="width:100%">
     <thead class="text-center thead-dark">
       <tr>
@@ -151,7 +150,7 @@
     </button>
   </div>
   <div class="modal-body text-center">
-    <p class="list-group-item active text-center text-uppercase">{{modalMessage}}</p>
+    <p class="list-group-item active text-center text-uppercase">Edytuj</p>
     <form [formGroup]="updateForm" (ngSubmit)="onUpdate()">
 
       <!-------------------------------------------------->
@@ -255,15 +254,11 @@
           <button [disabled]="updateForm.invalid" class="btn btn-primary btn-block">Zaktualizauj</button>
         </li>
       </ul>
-
       <!-------------------------------------------------->
-
     </form>
-
   </div>
 </ng-template>
 <!-- EDIT PRODUCT MODAL END-->
-
 
 <!-- ADD PIERWIASTKI PRICE-->
 <ng-template #templatePierwiastki>

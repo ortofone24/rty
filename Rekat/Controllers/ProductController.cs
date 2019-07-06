@@ -42,6 +42,7 @@ namespace Rekat.Controllers
         public async Task<IActionResult> UploadImage()
         {
             string imageName = null;
+            string url = "http://www.rekat.pl/pictureskat/";
             var httpRequest = _accessor.HttpContext.Request;
             var webRoot = _env.WebRootPath;
             var findTempImage = _db.ImagesTempUrl.FirstOrDefault(p => p.ImageId == 1);
@@ -54,6 +55,7 @@ namespace Rekat.Controllers
             imageName += DateTime.Now.ToString("yymmssfff") + Path.GetExtension(postedFile.FileName);
 
             var filePath = Path.Combine(webRoot + "\\" + "picturesKat\\" + imageName);
+            var fileToDisplayPath = Path.Combine(url , imageName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -62,7 +64,7 @@ namespace Rekat.Controllers
 
             var image = new ImageModel()
             {
-                ImageTempUrl = filePath
+                ImageTempUrl = fileToDisplayPath
             };
 
             //findTempImage.ImageId = image.ImageId;

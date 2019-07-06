@@ -17,9 +17,9 @@
         <li class="nav-item" *ngIf="!(LoginStatus$ | async) as LoginStatus">
           <a class="nav-link text-dark" *ngIf="LoginStatus" [routerLink]='["/login"]'>Zaloguj</a>
         </li>
-        <!--<li class="nav-item" *ngIf="!(LoginStatus$ | async) as LoginStatus">
-          <a class="nav-link text-dark" *ngIf="LoginStatus" [routerLink]='["/register"]'>Register</a>
-        </li>-->
+        <li class="nav-item" *ngIf="(LoginStatus$ | async) as LoginStatus">
+          <a class="nav-link text-dark" *ngIf="LoginStatus && userRoleStatus == 'Admin'" [routerLink]='["/register"]'>Dodaj użytkownika</a> 
+        </li>
         <li class="nav-item" *ngIf="(LoginStatus$ | async) as LoginStatus">
           <a class="nav-link text-danger" *ngIf="(UserName$ | async) as UserName">{{UserName | uppercase}}</a>
         </li>
