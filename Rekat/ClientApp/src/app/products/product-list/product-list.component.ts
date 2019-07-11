@@ -24,8 +24,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   imagePreview: string = "/images/iconsFolder.png";
   fileToUpload: File = null;
-  
 
+  public show: boolean = false;
+  
   // For the FormControl - Adding products
   insertForm: FormGroup;
   katNumber: FormControl;
@@ -104,6 +105,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
 
   onAddProduct() {
+    this.show = true;
     this.modalRef = this.modalService.show(this.modal);
   }
 
@@ -293,7 +295,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
         autoWidth: true,
         order: [[0, 'des']],
       };
-
+      
     // Products assigment
     this.products$ = this.productservice.getProducts();
 
@@ -375,6 +377,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
         'katWeigthPerKg': this._katWeigthPerKg,
         'imageUrl': this._imageUrl,
       });
+  }
+
+  toggle()
+  {
+    this.show = !this.show;
   }
 
   ngOnDestroy() {
