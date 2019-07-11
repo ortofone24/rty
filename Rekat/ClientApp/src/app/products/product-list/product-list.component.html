@@ -45,13 +45,13 @@
       <ul class="list-group">
         <li class="list-group-item">
           <img [src]="imagePreview" style="width: 250px; height: 200px">
+
+          <input type="file" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
+
+          <br />
+          <br />
           <ng-container *ngIf="show">
-            <input type="file" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
-
-            <br />
-            <br />
-
-            <button type="submit" id="bind" class="btn-large  btn-submit" [disabled]="Image.value==''" (click)="toggle()">Zatwierdź zdjęcie</button>
+          <button type="submit" class="btn-large  btn-submit" [disabled]="Image.value==''" (click)="toggle()">Zatwierdź zdjęcie</button> 
           </ng-container>
         </li>
       </ul>
