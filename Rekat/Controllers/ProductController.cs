@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
+using System.Collections.Generic;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Rekat.Controllers
@@ -55,7 +56,7 @@ namespace Rekat.Controllers
             imageName += DateTime.Now.ToString("yymmssfff") + Path.GetExtension(postedFile.FileName);
 
             var filePath = Path.Combine(webRoot + "\\" + "picturesKat\\" + imageName);
-            var fileToDisplayPath = Path.Combine(url , imageName);
+            var fileToDisplayPath = Path.Combine(url, imageName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -77,17 +78,25 @@ namespace Rekat.Controllers
         }
 
 
+        public List<double> GetActualPrices()
+        {
+            var list = new List<double>();
+            var dbItems = _db.CenyPierwiastkow.FirstOrDefault(p => p.PriceId == 1);
+
+            list.Add(dbItems.PlatynaPrice);      //0
+            list.Add(dbItems.PalladPrice);       //1
+            list.Add(dbItems.RodPrice);          //2
+            list.Add(dbItems.EuroExchangeRate);  //3
+
+            return list;
+        }
+
         [HttpPost("[action]")]
         [Authorize(Policy = "RequiredAdministratorRole")]
         public async Task<IActionResult> AddProduct([FromBody] ProductModel formdata)
         {
             var findTempImage2 = _db.ImagesTempUrl.FirstOrDefault(p => p.ImageId == 1);
             string imageUrl = findTempImage2.ImageTempUrl;
-
-            var findPierwiastkiPrice = _db.CenyPierwiastkow.FirstOrDefault(p => p.PriceId == 1);
-            double platynaPrice = findPierwiastkiPrice.PlatynaPrice;
-            double palladPrice = findPierwiastkiPrice.PalladPrice;
-            double rodPrice = findPierwiastkiPrice.RodPrice;
 
             var newproduct = new ProductModel
             {
@@ -97,9 +106,12 @@ namespace Rekat.Controllers
                 PalladWeight = formdata.PalladWeight,
                 RodWeight = formdata.RodWeight,
                 KatWeigthPerKg = formdata.KatWeigthPerKg,
-                KatPrice = (((double)platynaPrice * (double)formdata.PlatynaWeight) + 
-                           ((double)palladPrice * (double)formdata.PalladWeight) + 
-                           ((double)rodPrice * (double)formdata.RodWeight)) * (double)formdata.KatWeigthPerKg
+                KatPrice = ((GetActualPrices().ElementAt(0) * (double)formdata.PlatynaWeight) +
+                          (GetActualPrices().ElementAt(1) * (double)formdata.PalladWeight) +
+                           (GetActualPrices().ElementAt(2) * (double)formdata.RodWeight)) * (double)formdata.KatWeigthPerKg,
+                KatPricePLN = (((GetActualPrices().ElementAt(0) * (double)formdata.PlatynaWeight) +
+                           (GetActualPrices().ElementAt(1) * (double)formdata.PalladWeight) +
+                           (GetActualPrices().ElementAt(2) * (double)formdata.RodWeight)) * (double)formdata.KatWeigthPerKg) * GetActualPrices().ElementAt(3),
             };
 
             await _db.Products.AddAsync(newproduct);
@@ -132,7 +144,13 @@ namespace Rekat.Controllers
             findProduct.PalladWeight = formdata.PalladWeight;
             findProduct.RodWeight = formdata.RodWeight;
             findProduct.KatWeigthPerKg = formdata.KatWeigthPerKg;
-            findProduct.KatPrice = (double)formdata.PalladWeight + (double)formdata.PlatynaWeight;
+            findProduct.KatPrice = ((GetActualPrices().ElementAt(0) * (double)formdata.PlatynaWeight) +
+                         (GetActualPrices().ElementAt(1) * (double)formdata.PalladWeight) +
+                          (GetActualPrices().ElementAt(2) * (double)formdata.RodWeight)) * (double)formdata.KatWeigthPerKg;
+            findProduct.KatPricePLN = (((GetActualPrices().ElementAt(0) * (double)formdata.PlatynaWeight) +
+                           (GetActualPrices().ElementAt(1) * (double)formdata.PalladWeight) +
+                           (GetActualPrices().ElementAt(2) * (double)formdata.RodWeight)) * (double)formdata.KatWeigthPerKg) * GetActualPrices().ElementAt(3);
+
 
             _db.Entry(findProduct).State = EntityState.Modified;
             await _db.SaveChangesAsync();
@@ -140,8 +158,30 @@ namespace Rekat.Controllers
             return Ok(new JsonResult("Katalizator o id " + id + " został zaktualizowany"));
         }
 
+        [HttpPost("[action]")]
+        [Authorize(Policy = "RequiredAdministratorRole")]
+        public async Task<IActionResult> UpdateProductPrice()
+        {
+            var products = _db.Products.ToList();
+
+            var course = GetActualPrices().ElementAt(3);
+
+            foreach (var prod in products)
+            {
+                var newPrice = prod.KatPrice * course;
+                prod.KatPricePLN = newPrice;
+                _db.Entry(prod).State = EntityState.Modified;
+            }
+
+            await _db.SaveChangesAsync();
+
+            return Ok(new JsonResult("Zaktualizowales ceny"));
+        }
+
+
+
         [HttpDelete("[action]/{id}")]
-        //[Authorize(Policy = "RequiredAdministratorRole")]
+        [Authorize(Policy = "RequiredAdministratorRole")]
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
             if (!ModelState.IsValid)

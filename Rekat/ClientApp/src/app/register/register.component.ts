@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
   username: FormControl;
   password: FormControl;
   cpassword: FormControl;
-  email: FormControl;
+  //email: FormControl;
   modalRef: BsModalRef;
   errorList: string[];
   modalMessage: string;
@@ -82,7 +82,7 @@ export class RegisterComponent implements OnInit {
     this.username = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(5)]);
     this.password = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(5)]);
     this.cpassword = new FormControl('', [Validators.required, this.MustMatch(this.password)]);
-    this.email = new FormControl('', [Validators.required, Validators.email]);
+    //this.email = new FormControl('', [Validators.required, Validators.email]);
     this.errorList = [];
 
     this.insertForm = this.fb.group(
@@ -90,7 +90,7 @@ export class RegisterComponent implements OnInit {
         'username': this.username,
         'password': this.password,
         'cpassword': this.cpassword,
-        'email': this.email,
+        //'email': this.email,
       });
   }
 

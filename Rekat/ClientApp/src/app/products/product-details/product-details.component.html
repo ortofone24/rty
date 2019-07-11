@@ -17,7 +17,7 @@
           <h3 class="title mb-3">{{product.katNumber | uppercase}}</h3>
           <p class="price-detail-wrap">
             <span class="price h3 text-warning">
-              <span class="currency">PLN </span><span class="num">{{product.katPrice}}</span>
+              <span class="currency"></span><span class="num">{{product.katPrice | currency: 'EUR' : number : '.2-2'}} / {{product.katPricePLN | currency: 'PLN' : number : '.2-2'}}</span>
             </span>
           </p>
         </article>

@@ -19,5 +19,8 @@ namespace Rekat.Models
 
         [Required]
         public double PlatynaPrice { get; set; }
+
+        [Required]
+        public double EuroExchangeRate { get; set; }
     }
 }

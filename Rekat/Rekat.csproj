@@ -29,6 +29,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20190701205346_4.add_ImageModel.cs" />
     <Compile Remove="Migrations\20190701205346_4.add_ImageModel.Designer.cs" />
+    <Compile Remove="Migrations\20190709203900_6_disable_emailPropertyAsRequiredInRegistrations.cs" />
+    <Compile Remove="Migrations\20190709203900_6_disable_emailPropertyAsRequiredInRegistrations.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

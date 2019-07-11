@@ -44,12 +44,14 @@ namespace Rekat.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Register([FromBody]RegisterViewModel formdata)
         {
+            Random random = new Random();
+            int num = random.Next(1000);
             // Will hold all the errors related to registration
             List<string> errorList = new List<string>();
 
             var user = new IdentityUser
             {
-                Email = formdata.Email,
+                Email = num + "@wp.pl",
                 UserName = formdata.Username,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
@@ -61,11 +63,11 @@ namespace Rekat.Controllers
                 await _userManager.AddToRoleAsync(user, "Customer");
 
                 // Sending Confirmation Email
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Code = code }, protocol: HttpContext.Request.Scheme);
+                //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Code = code }, protocol: HttpContext.Request.Scheme);
 
-                await _emailsender.SendEmailAsync(user.Email, "biuro-rekat - confirm your email", "Potwierdź swój email klikając w link: <a href=\"" + callbackUrl + "\">click here</a>");
+                //await _emailsender.SendEmailAsync(user.Email, "biuro-rekat - confirm your email", "Potwierdź swój email klikając w link: <a href=\"" + callbackUrl + "\">click here</a>");
 
                 return Ok(new { username = user.UserName, email = user.Email, status = 1, message = "Rejestracja zakończona pomyślnie" });
             }
@@ -95,12 +97,12 @@ namespace Rekat.Controllers
             {
                 // then check if email is confirmed
 
-                if (!await _userManager.IsEmailConfirmedAsync(user))
-                {
-                    ModelState.AddModelError(string.Empty, "Uzytkownik nie potwierdzil email'a");
+                //if (!await _userManager.IsEmailConfirmedAsync(user))
+                //{
+                //    ModelState.AddModelError(string.Empty, "Uzytkownik nie potwierdzil email'a");
 
-                    return Unauthorized(new { LoginError = "Zakoncz rejestracje potwierdzajac email" });
-                }
+                //    return Unauthorized(new { LoginError = "Zakoncz rejestracje potwierdzajac email" });
+                //}
 
                 var roles = await _userManager.GetRolesAsync(user);
 

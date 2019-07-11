@@ -27,6 +27,9 @@ namespace Rekat.Models
 
         [Required]
         public double KatWeigthPerKg { get; set; }
+
+        [Required]
+        public double KatPricePLN { get; set; }
     }
 }
 

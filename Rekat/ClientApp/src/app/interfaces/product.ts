@@ -8,6 +8,7 @@ export interface Product
   rodWeight: number;
   katPrice: number;
   katWeigthPerKg: number;
+  katPricePLN: number;
 }
 
 

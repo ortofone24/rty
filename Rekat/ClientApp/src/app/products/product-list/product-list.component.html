@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <button class="btn btn-warning mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddProduct()"><i class="fa fa-plus"></i> Dodaj katalizator</button>
   <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onAddPierwiastkiPrice()"><i class="fa fa-plus"></i> Ceny pierwiastków</button>
-  <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'"><i class="fa fa-plus"></i> Przelicz ceny</button>
+  <button class="btn btn-basic mb-3 float-right text-uppercase" *ngIf="userRoleStatus == 'Admin'" (click)="onUpdateProductPriceButton()"><i class="fa fa-plus"></i> Przelicz ceny</button>
   <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered row-border hover" style="width:100%">
     <thead class="text-center thead-dark">
       <tr>
@@ -14,8 +14,8 @@
     <tbody>
       <tr *ngFor="let product of products" class="text-center">
         <td>{{product.katNumber}}</td>
-        <td>{{product.katPrice}} PLN </td>
-        <td><img [src]="product.imageUrl" *ngIf="product.imageUrl" style="float:none" width="75" /></td>
+        <td>{{product.katPrice | currency: 'EUR' : number : '.2-2'}} / {{product.katPricePLN | currency: 'PLN' : number : '.2-2'}}</td>
+        <td><img [src]="product.imageUrl" *ngIf="product.imageUrl" style="float:none" width="75" (click)="onSelect(product)" /></td>
         <td>
           <div class="btn-group mt-2" role="group">
             <button type="button" class="btn btn-success" (click)="onSelect(product)"><i class="fas fa-list"></i></button>
@@ -140,7 +140,6 @@
   </div>
 </ng-template>
 <!-- ADD PRODUCT MODAL END-->
-
 <!-- EDIT PRODUCT MODAL START-->
 <ng-template #editTemplate>
   <div class="modal-header">
@@ -259,7 +258,6 @@
   </div>
 </ng-template>
 <!-- EDIT PRODUCT MODAL END-->
-
 <!-- ADD PIERWIASTKI PRICE-->
 <ng-template #templatePierwiastki>
   <div class="modal-header">
@@ -272,16 +270,18 @@
   <table class="table table-bordered row-border hover" style="width:100%">
     <thead class="text-center thead-dark">
       <tr>
+        <th>Platyna</th>
         <th>Pallad</th>
         <th>Rod</th>
-        <th>Platyna</th>
+        <th>EUR</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let prices of pierwiastkiPrice">
-        <td align="center">{{prices.palladPrice}} PLN</td>
-        <td align="center">{{prices.rodPrice}} PLN</td>
-        <td align="center">{{prices.platynaPrice}} PLN</td>
+        <td align="center">{{prices.platynaPrice}}</td>
+        <td align="center">{{prices.palladPrice}}</td>
+        <td align="center">{{prices.rodPrice}}</td>
+        <td align="center">{{prices.euroExchangeRate}}</td>
       </tr>
     </tbody>
   </table>
@@ -293,6 +293,20 @@
     <form [formGroup]="pierwiastkiForm" (ngSubmit)="onSubmitPierwiastki()">
       <!------------------------------------------------->
       <ul class="list-group">
+
+        <li class="list-group-item">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
+            </div>
+            <input type="text" id="platynaPrice" formControlName="platynaPrice" class="form-control" placeholder="cena platyny" aria-label="name" aria-describedby="productTitle">
+          </div>
+          <div class="errorMessage" *ngIf="platynaPrice.touched && platynaPrice.errors">
+            <span *ngIf="platynaPrice.hasError('required')">Podaj cenę platyny.</span>
+            <span *ngIf="platynaPrice.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="platynaPrice.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
+          </div>
+        </li>
 
         <li class="list-group-item">
           <div class="input-group">
@@ -316,7 +330,7 @@
             <input type="text" id="rodPrice" formControlName="rodPrice" class="form-control" placeholder="cena rodu" aria-label="name" aria-describedby="productTitle">
           </div>
           <div class="errorMessage" *ngIf="rodPrice.touched && rodPrice.errors">
-            <span *ngIf="rodPrice.hasError('required')">Podaj cenę palladu.</span>
+            <span *ngIf="rodPrice.hasError('required')">Podaj cenę rodu.</span>
             <span *ngIf="rodPrice.hasError('maxlength')">Dozwolone 10 znaków.</span>
             <span *ngIf="rodPrice.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
           </div>
@@ -327,12 +341,12 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="productTitle"><i class="fa fa-pencil-square-o"></i></span>
             </div>
-            <input type="text" id="platynaPrice" formControlName="platynaPrice" class="form-control" placeholder="cena platyny" aria-label="name" aria-describedby="productTitle">
+            <input type="text" id="euroExchangeRate" formControlName="euroExchangeRate" class="form-control" placeholder="kurs euro" aria-label="name" aria-describedby="productTitle">
           </div>
-          <div class="errorMessage" *ngIf="platynaPrice.touched && platynaPrice.errors">
-            <span *ngIf="platynaPrice.hasError('required')">Podaj cenę palladu.</span>
-            <span *ngIf="platynaPrice.hasError('maxlength')">Dozwolone 10 znaków.</span>
-            <span *ngIf="platynaPrice.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
+          <div class="errorMessage" *ngIf="euroExchangeRate.touched && euroExchangeRate.errors">
+            <span *ngIf="euroExchangeRate.hasError('required')">Wprowadź cenę euro.</span>
+            <span *ngIf="euroExchangeRate.hasError('maxlength')">Dozwolone 10 znaków.</span>
+            <span *ngIf="euroExchangeRate.hasError('pattern')">Dozwolone tylko cyfry, wartości dzisiętne tylko po KROPCE</span>
           </div>
         </li>
 
@@ -346,3 +360,27 @@
   </div>
 </ng-template>
 <!--END PIERWIASTKI PRICE-->
+
+<!-- START UPDATE PRODUCT PRICE-->
+<ng-template #updateProductPriceTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Aktualizuj ceny</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body text-center">
+   <form (ngSubmit)="onUpdateProductPrice()">
+
+      <!-------------------------------------------------->
+      <ul class="list-group">
+        <li class="list-group-item">
+          <button class="btn btn-primary btn-block">Zaktualizauj</button>
+        </li>
+      </ul>
+      <!-------------------------------------------------->
+
+    </form>
+  </div>
+</ng-template>
+<!-- END UPDATE PRODUCT PRICE-->

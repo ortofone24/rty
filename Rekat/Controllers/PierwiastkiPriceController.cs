@@ -39,7 +39,8 @@ namespace Rekat.Controllers
             findId.PalladPrice = formdata.PalladPrice;
             findId.PlatynaPrice = formdata.PlatynaPrice;
             findId.RodPrice = formdata.RodPrice;
-                        
+            findId.EuroExchangeRate = formdata.EuroExchangeRate;       
+            
             _db.Entry(findId).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 

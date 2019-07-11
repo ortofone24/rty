@@ -4,4 +4,5 @@ export interface PierwiastkiPrice
   palladPrice: number;
   rodPrice: number;
   platynaPrice: number;
+  euroExchangeRate: number;
 }

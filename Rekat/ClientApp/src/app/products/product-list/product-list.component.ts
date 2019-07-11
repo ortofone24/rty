@@ -52,7 +52,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
   palladPrice: FormControl;
   rodPrice: FormControl;
   platynaPrice: FormControl;
-
+  euroExchangeRate: FormControl;
+  
   // Add Modal
   @ViewChild('template') modal: TemplateRef<any>;
 
@@ -61,6 +62,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   // Pierwiastki price Modal
   @ViewChild('templatePierwiastki') pierwiastkimodal: TemplateRef<any>;
+
+  //Updating product price from euro change
+  @ViewChild('updateProductPriceTemplate') updateProductPriceModal: TemplateRef<any>;
 
   // Modal properties
   modalMessage: string;
@@ -107,6 +111,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.show(this.pierwiastkimodal);
   }
 
+  onUpdateProductPriceButton()
+  {
+    this.modalRef = this.modalService.show(this.updateProductPriceModal);
+  }
 
   // Post file to the server
   onPostClick(Image)
@@ -117,6 +125,30 @@ export class ProductListComponent implements OnInit, OnDestroy {
         console.log('done');
       }
     )
+  }
+
+  // Method to update price when euro course changed
+  onUpdateProductPrice() {
+    console.log('odpalilem funkcje');
+
+    this.productservice.updateProductPrice().subscribe(
+      data => {
+        console.log('done');
+        this.productservice.clearCache();
+        this.products$ = this.productservice.getProducts();
+
+        this.products$.subscribe(newlist => {
+          this.products = newlist;
+          this.modalRef.hide();
+          this.rerender();
+        });
+        console.log("zaktualizowałeś ceny");
+      }
+      
+    )
+    
+    this.modalRef.hide();
+    this.rerender();
   }
 
   // Method to Add new Price of pierwiastki
@@ -295,12 +327,13 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.palladPrice = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
     this.rodPrice = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
     this.platynaPrice = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
+    this.euroExchangeRate = new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern("^[0-9.]*$")]);
 
     this.pierwiastkiForm = this.fb.group({
       'palladPrice': this.palladPrice,
       'rodPrice': this.rodPrice,
       'platynaPrice': this.platynaPrice,
-
+      'euroExchangeRate': this.euroExchangeRate
     });
 
     // Initializing Add product properties

@@ -21,6 +21,8 @@ export class ProductService {
 
   private updateUrl: string = "/api/product/updateproduct/";
 
+  private updateProductPriceUrl: string = "/api/product/updateproductprice/";
+
   private product$: Observable<Product[]>;
 
 
@@ -45,6 +47,11 @@ export class ProductService {
   // Update the Product
   updateProduct(id: number, editProduct: Product): Observable<Product> {
     return this.http.put<Product>(this.updateUrl + id, editProduct);
+  }
+
+  // Update product price after euro course changing
+  updateProductPrice() {
+    return this.http.post(this.updateProductPriceUrl, null);
   }
 
   // Delete Product
