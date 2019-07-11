@@ -41,7 +41,7 @@
   <div class="modal-body text-center">
     <p class="list-group-item active text-center text-uppercase">{{modalMessage}}</p>
 
-    <form #imageForm=ngForm (ngSubmit)="onPostClick(Image)">
+    <form #imageForm=ngForm>      <!--(ngSubmit)="onPostClick(Image)"-->
       <ul class="list-group">
         <li class="list-group-item">
           <img [src]="imagePreview" style="width: 250px; height: 200px">
@@ -50,9 +50,9 @@
 
           <br />
           <br />
-          <ng-container *ngIf="show">
-          <button type="submit" class="btn-large  btn-submit" [disabled]="Image.value==''" (click)="toggle()">Zatwierdź zdjęcie</button> 
-          </ng-container>
+          <!--<ng-container *ngIf="show">-->
+          <button type="submit" class="btn-large  btn-submit" [disabled]="Image.value=='' || clicked" (click)="onPostClick(Image); clicked = true">Zatwierdź zdjęcie</button> <!--(click)="toggle()"-->
+          <!--</ng-container>-->
         </li>
       </ul>
     </form>
